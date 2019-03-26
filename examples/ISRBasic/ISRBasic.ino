@@ -6,19 +6,20 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Description:	Priklad pouziti ve smycce loop. Jsou zde ukazany vsechny schopnosti knihovny.
+ * Description:	Priklad pouziti Externich preruseni. Jsou zde ukazany vsechny schopnosti knihovny.
  * Note:		Pozor! Metoda getClickCount() ma smysl, je pouzitelna pouze, v pripade pouziti externiho preruseni pro zmenu stavu tlacitka!!
+ * Note:		Pozor! Program byl testovan na Arduino UNO/AtMega328 a pouzita preruseni jsou INT0 a INT1.
  */
 
 #include <Arduino.h>
 
 //#define IRQSWITCH_IMPLEMENT_CLICK_HELD 0 // Odkomentovat pro zabraneni teto funkcionality!
-#define IRQSWITCH_IMPLEMENT_CLICK_COUNT 4 // Maximalni pocet pocitanych kliknuti na tlacitko!
+#define IRQSWITCH_IMPLEMENT_CLICK_COUNT 14 // Maximalni pocet pocitanych kliknuti na tlacitko!
 #include <IRQSwitch.hpp>
 
 // Definice pinu
-#define BTN_one	A1
-#define BTN_two	A2
+#define BTN_one	2
+#define BTN_two	3
 
 // Vypsat cas zpracovani obsluhy tlacitek?
 #define DEBUG	0
@@ -99,14 +100,16 @@ void setup()
 	digitalWrite(BTN_one, HIGH);
 	digitalWrite(BTN_two, HIGH);
 
+	// Navesuji preruseni.
+	attachInterrupt(digitalPinToInterrupt(BTN_one), buttonProccess, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(BTN_two), buttonProccess, CHANGE);
+
 	Serial.println("Ready!\n\n");
 
 }
 
 void loop()
 {
-	// Volani funkce pro zpracovani stavu tlacitek.
-	buttonProccess();
 
 	// Vypis stavu tlacitek.
 	if (btn_one.isClicked())
@@ -173,5 +176,6 @@ void loop()
 	}
 #endif
 
+	delay(1000);
 }
 
