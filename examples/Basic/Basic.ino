@@ -7,43 +7,63 @@
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
  * Description:	Priklad pouziti ve smycce loop. Jsou zde ukazany vsechny schopnosti knihovny.
- * Note:		Pozor! Metoda ClockCount() ma smysl, je pouzitelna, pouze v pripade pouziti exxterniho preruseni pro zmenu stavu tlacitka!!
+ * Note:		Pozor! Metoda getClickCount() ma smysl, je pouzitelna pouze, v pripade pouziti exxterniho preruseni pro zmenu stavu tlacitka!!
  */
 
-
 #include <Arduino.h>
+
+//#define IRQSWITCH_IMPLEMENT_CLICK_HELD 0 // Odkomentovat pro zabraneni teto funkcionality!
+#define IRQSWITCH_IMPLEMENT_CLICK_COUNT 4 // Maximalni pocet pocitanych kliknuti na tlacitko!
 #include <IRQSwitch.hpp>
 
 // Definice pinu
 #define BTN_one	A1
 #define BTN_two	A2
 
+// Vypsat cas zpracovani obsluhy tlacitek?
+#define DEBUG	0
+
 // Objekty predstavujici tlacitka
-IRQSwitch btn_one;
 IRQSwitch btn_two;
+IRQSwitch btn_one;
+
+#if DEBUG
+uint32_t delta = 0;
+#endif
 
 void buttonProccess()
 {
-	// Prevent before clicking on multiple buttons at once. It must be static!!
+#if DEBUG
+	uint32_t start = millis();
+#endif
+
+	// Prevence pred stiskem nekolika tlacitek soucasne. Musi byt staticka!!
 	static uint8_t last_btn_clicked = 0;
-	// Milliseconds to detect a long press of a button
+
+	// Millisekundy pro detekci dlouheho stisku tlacitka.
 	uint32_t ms = millis();
 
 	// Test button 1
 	if (digitalRead(BTN_one) == LOW)
-	{ // The button is pressed
+	// Tlacitko stisknute
+	{
 		if (last_btn_clicked == 0)
-		{ // The other button is not pressed
-			btn_one.setClickDown(ms); // Set to clicked
-			last_btn_clicked = BTN_one; // Remember the ID of the pressed button
+		// Zadne jine tlacitko stisknute neni.
+		{
+			btn_one.setClickDown(ms); // Nastaveni tlacitka jako "PRESSED".
+			last_btn_clicked = BTN_one; // Zapamatovani ID stisknuteho tlacitka.
 		}
+
 	} else if (last_btn_clicked == BTN_one)
-	{ // The last pressed button ID is the same
-		btn_one.setClickUp(ms); // Set to released
-		last_btn_clicked = 0; // Set the ID of the pressed button to 0
+	// Tlacitko neni stisknute,
+	// ale naposledy stisknute tlacitko ma stejne ID.
+	{
+		btn_one.setClickUp(ms); // Nastaveni tlacitka jako "RELEASED".
+		last_btn_clicked = 0; // Nulovani ID naposledy stisknuteho tlacitka.
 	}
 
 	// Test button 2
+	// Stejny postup ale s jinym ID (cislem pinu).
 	if (digitalRead(BTN_two) == LOW)
 	{
 		if (last_btn_clicked == 0)
@@ -51,11 +71,16 @@ void buttonProccess()
 			btn_two.setClickDown(ms);
 			last_btn_clicked = BTN_two;
 		}
+
 	} else if (last_btn_clicked == BTN_two)
 	{
 		btn_two.setClickUp(ms);
 		last_btn_clicked = 0;
 	}
+
+#if DEBUG
+	delta = millis() - start;
+#endif
 }
 
 void setup()
@@ -67,9 +92,10 @@ void setup()
 
 	Serial.println("Preparing...");
 
+	// Nastavuji piny jako vystup.
 	pinMode(BTN_one, INPUT);
 	pinMode(BTN_two, INPUT);
-
+	// Zapinam interni PULL_UP rezistory.
 	digitalWrite(BTN_one, HIGH);
 	digitalWrite(BTN_two, HIGH);
 
@@ -79,8 +105,10 @@ void setup()
 
 void loop()
 {
+	// Volani funkce pro zpracovani stavu tlacitek.
 	buttonProccess();
 
+	// Vypis stavu tlacitek.
 	if (btn_one.isClicked())
 	{
 		Serial.println("Button 1 clicked!");
@@ -91,7 +119,7 @@ void loop()
 		Serial.println("Button 2 clicked!");
 	}
 
-	if (IRQSWITCH_IMPLEMENT_CLICK_HELD)
+#if IRQSWITCH_IMPLEMENT_CLICK_HELD
 	{
 		if (btn_one.isHolded())
 		{
@@ -103,53 +131,47 @@ void loop()
 			Serial.println("Button 2 holded!");
 		}
 	}
+#endif
 
-	delay(1000);
-	if (IRQSWITCH_IMPLEMENT_CLICK_COUNT)
+#if IRQSWITCH_IMPLEMENT_CLICK_COUNT > 0
 	{
-		Serial.print("Button 1 has ");
-		Serial.print(btn_one.getClickCount());
-		Serial.println(" clicks");
+		// Prvni tlacitko je bez automatickeho resetovani pocitadla stisku tlacitka.
+		uint8_t count1 = btn_one.getClickCount();
 
-		Serial.print("Button 2 has ");
-		Serial.print(btn_two.getClickCount());
-		Serial.println(" clicks");
+		// Druhe tlacitko s automatickym resetovanim pocitadla stisknuti tlacitka.
+		uint8_t count2 = btn_two.getClickCountWithReset();
+
+		if (count1 > 0)
+		{
+			Serial.print("Button 1 has ");
+			Serial.print(count1);
+			Serial.println(" clicks");
+		}
+
+		if (count2 > 0)
+		{
+			Serial.print("Button 2 has ");
+			Serial.print(count2);
+			Serial.println(" clicks");
+		}
+
+		if (count1 >= IRQSWITCH_IMPLEMENT_CLICK_COUNT)
+		// Pokud je dosazen limit poctu stisknuti, proved reset pocitadla stisku tlacitka
+		{
+			btn_one.cleanClickCount();
+			Serial.println("Reset clicks counter.");
+		}
 	}
+#endif
+
+#if DEBUG
+	if (delta > 0)
+	{
+		Serial.print("buttonProccess = ");
+		Serial.print(delta);
+		Serial.println(" ms");
+	}
+#endif
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
