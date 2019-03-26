@@ -8,9 +8,9 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Verion:		2.3.5
- * Description:	Example of simple implementation in a loop. All available library options are shown here.
- * Note:		Attention! The ClockCount() method should only be used sensibly if you use external interruption to change the status of the buttons !!
+ * Verion:		2.3.6
+ *
+ * Note:		Attention! The getClickCount() method should only be used sensibly if you use external interruption to change the status of the buttons !!
  */
 
 /** NOTES **
@@ -22,8 +22,19 @@
 
 /** UPDATES **
  *
+ * 26.03.2019 - 2.3.6
+ *  - Prejmenovana metoda 'setClickDown()' na setClickStart().
+ *  - Prejmenovana metoda 'setClickUp()' na setClickEnd().
+ *  - Upravena metoda 'getClickCount()' uz automaticky neresetuje svoje pocitadlo.
+ *  - Pridana metoda 'getClickCountWithReset()' ktera automaticky resetuje svoje pocitadlo.
+ *  - Odstranena staicka promena 'any_button_clicked'.
+ *  - Oprava chyby ktera se tezko popisuje.
+ *  - Oprava detekce dlouheho stisku tlacitka a inkrementace pocitadla.
+ *    Drive se pocitadlo zvysovalo i pri dlouhem stisku tlacitka a to je spatne.
+ *    Pokud je potreba puvodni funkcionalita, snadno se da implementovat v kodu.
+ *
  * 26.03.2019 - 2.3.5
- *  - Pridana metoda pro zaznamenavani poctu kliknuti na tlacitko
+ *  - Pridana metoda pro zaznamenavani poctu kliknuti na tlacitko.
  *
  */
 
@@ -101,6 +112,15 @@ public:
 	uint8_t getClickCount();
 
 	/**
+	 * Get click count on the Button with reset clicks counter.
+	 *
+	 * @return uint8_t Count of clicks
+	 *
+	 * @note @see IRQSWITCH_IMPLEMENT_CLICK_COUNT
+	 */
+	uint8_t getClickCountWithReset();
+
+	/**
 	 * Reset clicks counter.
 	 */
 	void cleanClickCount();
@@ -126,7 +146,7 @@ public:
 	 *
 	 * @note Pro volani uvnitr metody zpracovavajici stisk tlacitka nebo preruseni
 	 */
-	bool setClickUp(uint32_t ms);
+	bool setClickEnd(uint32_t ms);
 
 	/**
 	 * Set Indicies to switch press down state
@@ -135,7 +155,7 @@ public:
 	 *
 	 * @note Pro volani uvnitr metody zpracovavajici stisk tlacitka nebo preruseni
 	 */
-	bool setClickDown(uint32_t ms);
+	bool setClickStart(uint32_t ms);
 
 	/**
 	 * Simulate the Click on the button.
@@ -157,7 +177,6 @@ public:
 	}
 
 private:
-	static bool any_button_clicked; // Asi je k nicemu
 
 	uint8_t m_pin = 0; /*!< The number a pin to bind a switch button */
 
@@ -165,13 +184,37 @@ private:
 	uint32_t m_start_click = 0; /*!< Time in milliseconds where the click/hold action is started */
 	uint32_t m_end_click = 0; /*!< Time in milliseconds where the click/hold action is ended */
 	uint16_t m_time_debounce = 300; /*!< Delay in milliseconds to prevent a debounced noise */
-#if IRQSWITCH_IMPLEMENT_CLICK_HELD
-	uint16_t m_time_hold = 600; /*!< Delay in milliseconds to roll a held action */
-#endif
+	uint32_t m_time_hold; /*!< Delay in milliseconds to roll a held action */
 
 #if IRQSWITCH_IMPLEMENT_CLICK_COUNT
 	uint8_t m_click_count; /*!< Incremented value for store klicks count */
 #endif
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

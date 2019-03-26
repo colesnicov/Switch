@@ -6,9 +6,8 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Verion:		2.3.5
+ * Verion:		2.3.6
  */
-
 
 #include <IRQSwitch.hpp>
 
@@ -36,7 +35,7 @@ IRQSwitch::~IRQSwitch()
 #if IRQSWITCH_IMPLEMENT_CLICK_HELD
 bool IRQSwitch::isHolded()
 {
-	return m_is_clicked && millis() - m_start_click > m_time_hold; // || m_end_click < m_start_click;
+	return m_is_clicked && millis() - m_start_click > m_time_hold;
 }
 #endif
 
@@ -66,10 +65,9 @@ void IRQSwitch::setClick(uint32_t ms)
 	}
 }
 
-bool IRQSwitch::setClickUp(uint32_t ms)
+bool IRQSwitch::setClickEnd(uint32_t ms)
 {
-	if (/*any_button_clicked && */(ms - m_end_click > m_time_debounce
-			|| m_end_click == 0))
+	if ((ms - m_end_click > m_time_debounce || m_end_click == 0))
 	{
 		m_end_click = ms;
 		m_is_clicked = false;
@@ -78,15 +76,17 @@ bool IRQSwitch::setClickUp(uint32_t ms)
 		{
 			m_end_click = 0;
 		}
-		//Button::any_button_clicked = false;
 
 #endif
 
 #if IRQSWITCH_IMPLEMENT_CLICK_COUNT > 0
-		m_click_count++;
-		if (m_click_count > IRQSWITCH_IMPLEMENT_CLICK_COUNT)
+		if (m_end_click > 0)
 		{
-			m_click_count = 0;
+			m_click_count++;
+			if (m_click_count > IRQSWITCH_IMPLEMENT_CLICK_COUNT)
+			{
+				m_click_count = 0;
+			}
 		}
 #endif
 
@@ -95,15 +95,13 @@ bool IRQSwitch::setClickUp(uint32_t ms)
 	return false;
 }
 
-bool IRQSwitch::setClickDown(uint32_t ms)
+bool IRQSwitch::setClickStart(uint32_t ms)
 {
-	if (/*!any_button_clicked && */(ms - m_end_click) > m_time_debounce
-			|| m_end_click == 0)
+	if ((ms - m_end_click) > m_time_debounce || m_end_click == 0)
 	{
 
 		m_start_click = ms;
 		m_is_clicked = true;
-		//Button::any_button_clicked = true;
 		return true;
 	}
 	return false;
@@ -121,9 +119,13 @@ void IRQSwitch::unbind()
 	digitalWrite(m_pin, HIGH);
 }
 
-bool IRQSwitch::any_button_clicked = false;
-
 uint8_t IRQSwitch::getClickCount()
+{
+	uint8_t click_count = m_click_count;
+	return click_count;
+}
+
+uint8_t IRQSwitch::getClickCountWithReset()
 {
 	uint8_t click_count = m_click_count;
 	cleanClickCount();

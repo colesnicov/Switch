@@ -50,7 +50,7 @@ void buttonProccess()
 		if (last_btn_clicked == 0)
 		// Zadne jine tlacitko stisknute neni.
 		{
-			btn_one.setClickDown(ms); // Nastaveni tlacitka jako "PRESSED".
+			btn_one.setClickStart(ms); // Nastaveni tlacitka jako "PRESSED".
 			last_btn_clicked = BTN_one; // Zapamatovani ID stisknuteho tlacitka.
 		}
 
@@ -58,7 +58,7 @@ void buttonProccess()
 	// Tlacitko neni stisknute,
 	// ale naposledy stisknute tlacitko ma stejne ID.
 	{
-		btn_one.setClickUp(ms); // Nastaveni tlacitka jako "RELEASED".
+		btn_one.setClickEnd(ms); // Nastaveni tlacitka jako "RELEASED".
 		last_btn_clicked = 0; // Nulovani ID naposledy stisknuteho tlacitka.
 	}
 
@@ -68,13 +68,13 @@ void buttonProccess()
 	{
 		if (last_btn_clicked == 0)
 		{
-			btn_two.setClickDown(ms);
+			btn_two.setClickStart(ms);
 			last_btn_clicked = BTN_two;
 		}
 
 	} else if (last_btn_clicked == BTN_two)
 	{
-		btn_two.setClickUp(ms);
+		btn_two.setClickEnd(ms);
 		last_btn_clicked = 0;
 	}
 
