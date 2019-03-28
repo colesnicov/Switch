@@ -6,7 +6,15 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Verion:		2.4.0
+ * Verion:		2.4.2
+ */
+
+/**
+ *
+ * @todo
+ *
+ *
+ *
  */
 
 #include <Arduino.h>
@@ -27,6 +35,29 @@ IRQSwitch::IRQSwitch() :
 				m_click_count(0)
 #endif
 {
+#if IRQSWITCH_DEBUG
+	strncpy(m_name, "no_name", strlen("no_name"));
+#endif
+}
+
+IRQSwitch::IRQSwitch(char name[10]) :
+				m_pin(0),
+				m_is_clicked(false),
+				m_start_click(0),
+				m_end_click(0),
+				m_time_debounce(300)
+#if IRQSWITCH_IMPLEMENT_CLICK_HELD
+						,
+				m_time_hold(450)
+#endif
+#if IRQSWITCH_IMPLEMENT_CLICK_COUNT
+						,
+				m_click_count(0)
+#endif
+{
+#if IRQSWITCH_DEBUG
+	strncpy(m_name, name, strlen(name));
+#endif
 }
 
 IRQSwitch::~IRQSwitch()
@@ -108,10 +139,15 @@ bool IRQSwitch::setClickStart(uint32_t ms)
 	return false;
 }
 
-void IRQSwitch::bind(uint8_t pin, uint8_t mode)
+void IRQSwitch::bind(char name[10], uint8_t pin, uint8_t mode)
 {
+#if IRQSWITCH_DEBUG
+	size_t siz =  strlen(name);
+	strncpy(m_name, name, (siz < IRQSWITCH_NAME_LENGTH) ? IRQSWITCH_NAME_LENGTH : siz);
+#endif
 	m_pin = pin;
 	pinMode(pin, mode);
+	digitalWrite(pin, HIGH);
 }
 
 void IRQSwitch::unbind()
@@ -140,9 +176,11 @@ void IRQSwitch::cleanClickCount()
 
 uint32_t IRQSwitch::getHoldedTime()
 {
-	if(m_is_clicked){
+	if (m_is_clicked)
+	{
 		return millis() - m_start_click;
-	}else{
+	} else
+	{
 		return 0;
 	}
 }
@@ -158,3 +196,46 @@ uint8_t IRQSwitch::getPin()
 {
 	return m_pin;
 }
+
+void IRQSwitch::bind(char name[10], uint8_t pin)
+{
+	bind(name, pin, IRQSWITCH_DEFAULT_INPUT_TYPE);
+}
+
+char* IRQSwitch::getName()
+{
+	return m_name;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

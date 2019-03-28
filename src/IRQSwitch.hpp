@@ -8,7 +8,7 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Verion:		2.4.0
+ * Verion:		2.4.2
  *
  * Note:		Attention! The getClickCount() method should only be used sensibly if you use external interruption to change the status of the buttons !!
  */
@@ -20,6 +20,10 @@
  */
 
 /** UPDATES **
+ * 28.03.2019 - 2.4.2
+ *  - Uzpusobene pro lepsi produktivitu.
+ *  - Poupraveny komentare.
+ *
  * 28.03.2019 - 2.4.0
  *  - Pridana metoda 'getHoldedTime()'
  *  - Pridana metoda 'getHoldedTimeWithReset()'
@@ -40,7 +44,22 @@
  *
  */
 
+#include <Arduino.h>
 #include <stdint.h>
+
+#ifndef IRQSWITCH_DEBUG
+/**
+ * Set to 1 if you have more memory!! See the code.
+ */
+#define IRQSWITCH_DEBUG					1
+#endif
+
+#ifndef IRQSWITCH_NAME_LENGTH
+/**
+ * Maximum count of characters in name string.
+ */
+#define IRQSWITCH_NAME_LENGTH			10
+#endif
 
 #ifndef IRQSWITCH_IMPLEMENT_CLICK_HELD
 /**
@@ -63,11 +82,21 @@
 #define IRQSWITCH_IMPLEMENT_CLICK_COUNT 100
 #endif
 
-#define IRQSwitch_Version "2.3.5"
-
 #if IRQSWITCH_IMPLEMENT_CLICK_HELD_TIME and !IRQSWITCH_IMPLEMENT_CLICK_HELD
 #error "Not allowed, You must enable the 'Keep button pressed' (see IRQSWITCH_IMPLEMENT_CLICK_HELD) feature."
 #endif
+
+#ifndef IRQSWITCH_HANDLER_DEFAULT_INPUT_type
+/**
+ * Default internal (in the MCU) pin matrix type. Eg. INPUT, INPUT_PULLUP.
+ */
+#define IRQSWITCH_DEFAULT_INPUT_TYPE	INPUT_PULLUP
+#endif
+
+/**
+ * Library version.
+ */
+#define IRQSwitch_Version "2.4.2"
 
 /**
  * Simulate a Tactile Switch Button interface.
@@ -82,6 +111,8 @@ public:
 	 */
 	IRQSwitch();
 
+	IRQSwitch(char name[10]);
+
 	/**
 	 * Destructor
 	 * Do nothing
@@ -92,10 +123,20 @@ public:
 	 * Bind a pin to physical output pad of MCU
 	 * This step also will enabled PULL UP resistor on this pin
 	 *
+	 * @param name	Name of the Object. For DEBUG only. @see IRQSWITCH_DEBUG
+	 * @param pin	Pin to bind to the switch functionality
+	 */
+	void bind(char name[10], uint8_t pin);
+
+	/**
+	 * Bind a pin to physical output pad of MCU
+	 * This step also will enabled PULL UP resistor on this pin
+	 *
+	 * @param name	Name of the Object. For DEBUG only. @see IRQSWITCH_DEBUG
 	 * @param pin	Pin to bind to the switch functionality
 	 * @param mode	Mode of input pin (INPUT, INPUT_PULLUP)
 	 */
-	void bind(uint8_t pin, uint8_t mode);
+	void bind(char name[10], uint8_t pin, uint8_t mode);
 
 	/**
 	 * UnBind a physical pin of MCU from a switch functionality
@@ -189,7 +230,7 @@ public:
 
 	/**
 	 * Simulate the Click on the button.
-	 * @param ms milliseconds
+	 * @param ms milliseconds.
 	 *
 	 * @note This method its a pure concept!
 	 * @note Do not use this method. !
@@ -197,24 +238,38 @@ public:
 	void setClick(uint32_t ms);
 
 	/**
-	 * Returns a number of pin used for this Switch Button
+	 * Returns a number of pin used for this Switch Button.
 	 *
-	 * @return uint8_t Pin number
+	 * @return uint8_t Pin number.
 	 */
 	uint8_t getPin();
 
+#if IRQSWITCH_DEBUG
+	/**
+	 * Returns the name of object.
+	 *
+	 * @note	For DEBUG only! @see IRQSWITCH_DEBUG.
+	 * @return	char*
+	 */
+	char* getName();
+#endif
+
 private:
 
-	uint8_t m_pin = 0; /*!< The number a pin to bind a switch button */
+	uint8_t m_pin = 0; /*!< The number a pin to bind a switch button. */
 
-	bool m_is_clicked = false; /*!< The switch button has bin clicked for now? */
-	uint32_t m_start_click = 0; /*!< Time in milliseconds where the click/hold action is started */
-	uint32_t m_end_click = 0; /*!< Time in milliseconds where the click/hold action is ended */
-	uint16_t m_time_debounce = 300; /*!< Delay in milliseconds to prevent a debounced noise */
-	uint32_t m_time_hold; /*!< Delay in milliseconds to roll a held action */
+	bool m_is_clicked = false; /*!< The switch button has bin clicked for now?. */
+	uint32_t m_start_click = 0; /*!< Time in milliseconds where the click/hold action is started. */
+	uint32_t m_end_click = 0; /*!< Time in milliseconds where the click/hold action is ended. */
+	uint16_t m_time_debounce = 300; /*!< Delay in milliseconds to prevent a debounced noise. */
+	uint32_t m_time_hold; /*!< Delay in milliseconds to roll a held action. */
 
 #if IRQSWITCH_IMPLEMENT_CLICK_COUNT
-	uint8_t m_click_count; /*!< Incremented value for store klicks count */
+	uint8_t m_click_count; /*!< Incremented value for store klicks count. */
+#endif
+
+#if IRQSWITCH_DEBUG
+	char m_name[IRQSWITCH_NAME_LENGTH];
 #endif
 
 };
