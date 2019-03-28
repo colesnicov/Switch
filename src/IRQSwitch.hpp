@@ -8,7 +8,7 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Verion:		2.3.6
+ * Verion:		2.4.0
  *
  * Note:		Attention! The getClickCount() method should only be used sensibly if you use external interruption to change the status of the buttons !!
  */
@@ -21,6 +21,9 @@
  */
 
 /** UPDATES **
+ * 28.03.2019 - 2.4.0
+ *  - Pridana metoda 'getHoldedTime()'
+ *  - Pridana metoda 'getHoldedTimeWithReset()'
  *
  * 26.03.2019 - 2.3.6
  *  - Prejmenovana metoda 'setClickDown()' na setClickStart().
@@ -47,6 +50,13 @@
 #define IRQSWITCH_IMPLEMENT_CLICK_HELD	1
 #endif
 
+#ifndef IRQSWITCH_IMPLEMENT_CLICK_HELD_TIME
+/**
+ * Set 1 if you wanna have a time of hold BUTTON in milliseconds functionality, otherwise 0.
+ */
+#define IRQSWITCH_IMPLEMENT_CLICK_HELD_TIME	1
+#endif
+
 #ifndef IRQSWITCH_IMPLEMENT_CLICK_COUNT
 /**
  * Set (nums of clicks) if you wanna have Click Counter functionality. otherwise 0.
@@ -55,6 +65,10 @@
 #endif
 
 #define IRQSwitch_Version "2.3.5"
+
+#if IRQSWITCH_IMPLEMENT_CLICK_HELD_TIME and !IRQSWITCH_IMPLEMENT_CLICK_HELD
+#error "Not allowed, You must enable the 'Keep button pressed' (see IRQSWITCH_IMPLEMENT_CLICK_HELD) feature."
+#endif
 
 /**
  * Simulate a Tactile Switch Button interface.
@@ -127,6 +141,23 @@ public:
 
 #endif
 
+#if IRQSWITCH_IMPLEMENT_CLICK_HELD_TIME
+
+	/**
+	 * Returns the hold time of the button.
+	 *
+	 * @return uint32_t Time in milliseconds.
+	 */
+	uint32_t getHoldedTime();
+
+	/**
+	 * Returns the hold time of the button with reset hold counter.
+	 *
+	 * @return uint32_t Time in milliseconds.
+	 */
+	uint32_t getHoldedTimeWithReset();
+#endif
+
 	/**
 	 * Is the switch has clicked?
 	 *
@@ -167,14 +198,11 @@ public:
 	void setClick(uint32_t ms);
 
 	/**
-	 * Returns a number of used pin for this Switch Button
+	 * Returns a number of pin used for this Switch Button
 	 *
 	 * @return uint8_t Pin number
 	 */
-	uint8_t getPin()
-	{
-		return m_pin;
-	}
+	uint8_t getPin();
 
 private:
 
@@ -191,30 +219,4 @@ private:
 #endif
 
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

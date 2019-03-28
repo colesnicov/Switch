@@ -6,7 +6,7 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Verion:		2.3.6
+ * Verion:		2.4.0
  */
 
 #include <IRQSwitch.hpp>
@@ -137,3 +137,23 @@ void IRQSwitch::cleanClickCount()
 	m_click_count = 0;
 }
 
+uint32_t IRQSwitch::getHoldedTime()
+{
+	if(m_is_clicked){
+		return millis() - m_start_click;
+	}else{
+		return 0;
+	}
+}
+
+uint32_t IRQSwitch::getHoldedTimeWithReset()
+{
+	uint32_t t;
+
+	return t;
+}
+
+uint8_t IRQSwitch::getPin()
+{
+	return m_pin;
+}

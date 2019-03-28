@@ -13,8 +13,9 @@
 
 #include <Arduino.h>
 
-//#define IRQSWITCH_IMPLEMENT_CLICK_HELD 0 // Odkomentovat pro zabraneni teto funkcionality!
-#define IRQSWITCH_IMPLEMENT_CLICK_COUNT 14 // Maximalni pocet pocitanych kliknuti na tlacitko!
+#define IRQSWITCH_IMPLEMENT_CLICK_HELD_TIME 	1// Detekovat delku trvani udrzovani tlacitka ve stisknutem stavu?
+//#define IRQSWITCH_IMPLEMENT_CLICK_HELD			0 // Odkomentovat pro zabraneni teto funkcionality!
+#define IRQSWITCH_IMPLEMENT_CLICK_COUNT			14 // Maximalni pocet pocitanych kliknuti na tlacitko!
 #include <IRQSwitch.hpp>
 
 // Definice pinu
@@ -132,6 +133,24 @@ void loop()
 		if (btn_two.isHolded())
 		{
 			Serial.println("Button 2 holded!");
+		}
+	}
+#endif
+
+#if IRQSWITCH_IMPLEMENT_CLICK_HELD_TIME
+	{
+		if (btn_one.isHolded())
+		{
+			Serial.print("Button 1 has holded state: ");
+			Serial.print(btn_one.getHoldedTime());
+			Serial.println(" ms");
+		}
+
+		if (btn_two.isHolded())
+		{
+			Serial.print("Button 2 has holded state: ");
+			Serial.print(btn_two.getHoldedTime());
+			Serial.println(" ms");
 		}
 	}
 #endif
