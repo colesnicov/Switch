@@ -9,6 +9,7 @@
  * Verion:		2.4.0
  */
 
+#include <Arduino.h>
 #include <IRQSwitch.hpp>
 
 IRQSwitch::IRQSwitch() :

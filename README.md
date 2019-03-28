@@ -1,4 +1,4 @@
-## Seznamte se, IRQSwitch 2.3.
+## Seznamte se, IRQSwitch.
 
 ### IRQSwitch je sada nastroju (Trid) pro obsluhu stisknuti momentovych tlacitek.
 **!!Knihovna je stale ve vyvoji!!**

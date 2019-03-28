@@ -16,7 +16,6 @@
 /** NOTES **
  *
  * - Nepouzivat '(un)bind(...)' - Neni zrejmy koncept, jak metody pouzivat.
- * - Nepouzivat 'any_button_clicked' - Neni zrejmy koncept, k cemu je?
  * - Nepouzivat 'setClick(...)' - Neni zrejmy koncept, k cemu je?
  */
 
@@ -41,7 +40,7 @@
  *
  */
 
-#include <Arduino.h>
+#include <stdint.h>
 
 #ifndef IRQSWITCH_IMPLEMENT_CLICK_HELD
 /**
