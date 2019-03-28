@@ -6,15 +6,7 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Verion:		2.4.2
- */
-
-/**
- *
- * @todo
- *
- *
- *
+ * Version:		2.5.0
  */
 
 #include <Arduino.h>
@@ -62,6 +54,7 @@ IRQSwitch::IRQSwitch(char name[10]) :
 
 IRQSwitch::~IRQSwitch()
 {
+	unbind();
 }
 
 #if IRQSWITCH_IMPLEMENT_CLICK_HELD
@@ -142,8 +135,9 @@ bool IRQSwitch::setClickStart(uint32_t ms)
 void IRQSwitch::bind(char name[10], uint8_t pin, uint8_t mode)
 {
 #if IRQSWITCH_DEBUG
-	size_t siz =  strlen(name);
-	strncpy(m_name, name, (siz < IRQSWITCH_NAME_LENGTH) ? IRQSWITCH_NAME_LENGTH : siz);
+	size_t siz = strlen(name);
+	strncpy(m_name, name,
+			(siz < IRQSWITCH_NAME_LENGTH) ? IRQSWITCH_NAME_LENGTH : siz);
 #endif
 	m_pin = pin;
 	pinMode(pin, mode);
@@ -206,36 +200,4 @@ char* IRQSwitch::getName()
 {
 	return m_name;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -8,18 +8,21 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Verion:		2.4.2
+ * Version:		2.5.0
  *
  * Note:		Attention! The getClickCount() method should only be used sensibly if you use external interruption to change the status of the buttons !!
  */
 
 /** NOTES **
  *
- * - Nepouzivat '(un)bind(...)' - Neni zrejmy koncept, jak metody pouzivat.
  * - Nepouzivat 'setClick(...)' - Neni zrejmy koncept, k cemu je?
  */
 
 /** UPDATES **
+ *
+ * 28.03.2019 - 2.5.0
+ *  - Metody 'bind(...)' a 'unbind(...)' jiz jsou pouzitelne.
+ *
  * 28.03.2019 - 2.4.2
  *  - Uzpusobene pro lepsi produktivitu.
  *  - Poupraveny komentare.
@@ -46,6 +49,11 @@
 
 #include <Arduino.h>
 #include <stdint.h>
+
+/**
+ * Library version.
+ */
+#define IRQSwitch_Version "2.5.0"
 
 #ifndef IRQSWITCH_DEBUG
 /**
@@ -92,11 +100,6 @@
  */
 #define IRQSWITCH_DEFAULT_INPUT_TYPE	INPUT_PULLUP
 #endif
-
-/**
- * Library version.
- */
-#define IRQSwitch_Version "2.4.2"
 
 /**
  * Simulate a Tactile Switch Button interface.
