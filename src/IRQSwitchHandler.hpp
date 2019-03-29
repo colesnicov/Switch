@@ -12,6 +12,10 @@
  */
 
 /** UPDATES **
+ *
+ * 29.03.2019 - 2.5.1
+ *  - Definice jsou presunuty do samostatneho souboru 'IRQSwitchConfig.h'
+ *
  * 28.03.2019 - 2.5.0
  *  - Pridani tridy 'IRQSwitchHandler'.
  *
@@ -20,21 +24,8 @@
 #include <IRQSwitch.hpp>
 #include <stdint.h>
 
+#include "IRQSwitchConfig.h"
 
-/**
- * This set maximum of buttons to manage.
- * Defaults is 12.
- */
-#ifndef IRQSWITCH_HANDLER_MAX_BUTTONS
-#define IRQSWITCH_HANDLER_MAX_BUTTONS	12
-#endif
-
-/**
- * This indicate, if you want, to check buttons count in manage before added new one.
- */
-#ifndef IRQSWITCH_HANDLER_CHECK_COUNT
-#define IRQSWITCH_HANDLER_CHECK_COUNT	0
-#endif
 
 /**
  * Manage button to automatically changed states.

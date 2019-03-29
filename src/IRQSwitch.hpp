@@ -20,6 +20,9 @@
 
 /** UPDATES **
  *
+ * 29.03.2019 - 2.5.1
+ *  - Definice jsou presunuty do samostatneho souboru 'IRQSwitchConfig.h'
+ *
  * 28.03.2019 - 2.5.0
  *  - Metody 'bind(...)' a 'unbind(...)' jiz jsou pouzitelne.
  *
@@ -50,57 +53,7 @@
 #include <Arduino.h>
 #include <stdint.h>
 
-/**
- * Library version.
- */
-#define IRQSwitch_Version "2.5.0"
-
-#ifndef IRQSWITCH_DEBUG
-/**
- * Set to 1 if you have more memory!! See the code.
- */
-#define IRQSWITCH_DEBUG					1
-#endif
-
-#ifndef IRQSWITCH_NAME_LENGTH
-/**
- * Maximum count of characters in name string.
- */
-#define IRQSWITCH_NAME_LENGTH			10
-#endif
-
-#ifndef IRQSWITCH_IMPLEMENT_CLICK_HELD
-/**
- * Set 1 if you wanna have a hold BUTTON functionality, otherwise 0.
- */
-#define IRQSWITCH_IMPLEMENT_CLICK_HELD	1
-#endif
-
-#ifndef IRQSWITCH_IMPLEMENT_CLICK_HELD_TIME
-/**
- * Set 1 if you wanna have a time of hold BUTTON in milliseconds functionality, otherwise 0.
- */
-#define IRQSWITCH_IMPLEMENT_CLICK_HELD_TIME	1
-#endif
-
-#ifndef IRQSWITCH_IMPLEMENT_CLICK_COUNT
-/**
- * Set (nums of clicks) if you wanna have Click Counter functionality. otherwise 0.
- */
-#define IRQSWITCH_IMPLEMENT_CLICK_COUNT 100
-#endif
-
-#if IRQSWITCH_IMPLEMENT_CLICK_HELD_TIME and !IRQSWITCH_IMPLEMENT_CLICK_HELD
-#error "Not allowed, You must enable the 'Keep button pressed' (see IRQSWITCH_IMPLEMENT_CLICK_HELD) feature."
-#endif
-
-#ifndef IRQSWITCH_HANDLER_DEFAULT_INPUT_type
-/**
- * Default internal (in the MCU) pin matrix type. Eg. INPUT, INPUT_PULLUP.
- */
-#define IRQSWITCH_DEFAULT_INPUT_TYPE	INPUT_PULLUP
-#endif
-
+#include "IRQSwitchConfig.h"
 /**
  * Simulate a Tactile Switch Button interface.
  */
