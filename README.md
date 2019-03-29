@@ -27,7 +27,7 @@ V pripade potizi nebo napadu:
 - [Issues](http://github.com/colesnicov/IRQSwitch/issues/) jsou vitany.
 - [PullRequests](http://github.com/colesnicov/IRQSwitch/pulls/) jsou vitany ale jsou dukladne zvazovany.
 
-Vsechny tridy jsou komentovany a vsechny moznosti knihovny jsou dobre predvedeny v [ukazkach](http://github.com/colesnicov/IRQSwitch/examples/).
+Vsechny tridy jsou komentovany a vsechny moznosti knihovny jsou dobre predvedeny v [ukazkach](http://github.com/colesnicov/IRQSwitch/tree/master/examples/).
 
 
 
