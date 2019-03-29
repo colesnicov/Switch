@@ -1,12 +1,12 @@
 /**
  * This file is a part of examples of a IRQSwitch Arduino library.
  *
- * File:		examples/Handler/Handler.ino
+ * File:		examples/Basic/Basic.ino
  * Created on:	31. 10. 2018
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Description:	Priklad Handleru pouziti ve smycce loop. Jsou zde ukazany vsechny schopnosti knihovny.
+ * Description:	Priklad pouziti ve smycce loop. Jsou zde ukazany vsechny schopnosti knihovny.
  * Note:		Pozor! Metoda getClickCount() ma smysl, je pouzitelna pouze, v pripade pouziti externiho preruseni pro zmenu stavu tlacitka!!
  */
 
@@ -47,7 +47,7 @@ void setup()
 
 	{
 		btn_one = buttons.CreateButton((char*) "btn_one", BTN_one);
-		if (btn_one)
+		if (!btn_one)
 		{
 			Serial.print("Doslo k chybe behem vytvareni tlacitka: ");
 			Serial.println(buttons.GetButton(btn_one)->getName());
@@ -60,7 +60,6 @@ void setup()
 	{
 		if (!buttons.AddButton(&btn_two))
 		{
-			btn_two.bind((char*) "btn_two", BTN_two, INPUT_PULLUP);
 			Serial.print("Doslo k chybe behem vytvareni tlacitka: ");
 			Serial.print(btn_two.getName());
 			Serial.println("!");
@@ -68,6 +67,7 @@ void setup()
 			{
 			}
 		}
+		btn_two.bind((char*) "btn_two", BTN_two, INPUT_PULLUP);
 	}
 
 	Serial.println("Ready!\n\n");
