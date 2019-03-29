@@ -2,9 +2,11 @@
 
 ### IRQSwitch je sada nastroju (Trid) pro obsluhu stisknuti tlacitek.
 
-<b><i><u>!!Knihovna je stale ve vyvoji!!</u></i></b><br><br>
+**MIT Licence**
 
-<b><u>Plne podporuje pouze Arduino!</u></b> - <b>Testovano na Arduino UNO, AtMega168/328, AtTiny13/85.</b>
+***!!Knihovna je stale ve vyvoji!!***
+
+***Plne podporuje pouze Arduino! ale da se snadno upravit pro dalsi platformy.* - Testovano na Arduino UNO, AtMega168/328, AtTiny13/85.**
 
 Trida **'IRQSwitch'** v sobe ukryva celou logiku pro detekci ruznych druhu udalosti nad tlacitkem. Podporuje nasledujici metody obsluhy tlacitek: 
 - `isClicked()`		- Jednoduche stisknuti
