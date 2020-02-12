@@ -6,13 +6,14 @@
 * Author:    	Denis Colesnicov <eugustus@gmail.com>
 * Licence:   	MIT
 * Home:    		https://github.com/colesnicov/IRQSwitch
-* Description:	Priklad pouziti ve funkci loop. Jsou zde ukazany vsechny schopnosti knihovny.
+* Description:	Priklad pouziti s prerusenim. Jsou zde ukazany vsechny schopnosti knihovny.
 * Note:    		Pozor! Metoda getClickCount() ma smysl, je pouzitelna pouze, v pripade pouziti externiho preruseni pro zmenu stavu tlacitka!!
 */
 
 
 #include <Arduino.h>
 
+#include "IRQSwitch/IRQSwitchArduino.hpp"
 #include "IRQSwitch/IRQSwitchConfig.h"
 #include "IRQSwitch/IRQSwitch.hpp"
 
@@ -25,60 +26,19 @@
 IRQSwitch btn_two;
 IRQSwitch btn_one;
 
-
-// Prevence pred stiskem nekolika tlacitek soucasne.
-volatile uint8_t last_btn_clicked = 0;
-
+// Spravce obsluhy stavu tlacitek
+IRQSwitchArduino handler;
 
 void buttonProccess() {
-
-	// Millisekundy pro detekci dlouheho stisku tlacitka.
-	uint32_t ms = millis();
-
-	// Test button 1
-	if (digitalRead(BTN_one) == LOW)
-	// Tlacitko stisknute
-	{
-		if (last_btn_clicked == 0)
-		// Zadne jine tlacitko stisknute neni.
-				{
-			btn_one.setClickStart(ms); // Nastaveni tlacitka jako "PRESSED".
-			last_btn_clicked = BTN_one; // Zapamatovani ID stisknuteho tlacitka.
-			return;
-		}
-
-	} else if (last_btn_clicked == BTN_one)
-	// Tlacitko neni stisknute,
-	// ale naposledy stisknute tlacitko ma stejne ID.
-	{
-		btn_one.setClickEnd(ms); // Nastaveni tlacitka jako "RELEASED".
-		last_btn_clicked = 0; // Nulovani ID naposledy stisknuteho tlacitka.
-		return;
-	}
-
-	// Test button 2
-	// Stejny postup ale s jinym ID (cislem pinu).
-	if (digitalRead(BTN_two) == LOW) {
-		if (last_btn_clicked == 0) {
-			btn_two.setClickStart(ms);
-			last_btn_clicked = BTN_two;
-			return;
-		}
-
-	} else if (last_btn_clicked == BTN_two) {
-		btn_two.setClickEnd(ms);
-		last_btn_clicked = 0;
-		return;
-	}
-
+	handler.Update(millis());
 }
+
 
 void setup() {
 	Serial.begin(115200);
 
 	Serial.print("IRQSwitch Version ");
 	Serial.println(IRQSwitch_Version);
-
 
 	// Nastavuji piny jako vystup.
 	pinMode(BTN_one, INPUT);
@@ -89,13 +49,18 @@ void setup() {
 	//digitalWrite(BTN_one, HIGH);
 	//digitalWrite(BTN_two, HIGH);
 
+	handler.AddButton(&btn_one, BTN_one);
+	handler.AddButton(&btn_two, BTN_two);
+
+	// Navesuji preruseni.
+	attachInterrupt(digitalPinToInterrupt(BTN_one), buttonProccess, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(BTN_two), buttonProccess, CHANGE);
+
 	Serial.println("Ready!\n\n");
 
 }
 
 void loop() {
-	// Volani funkce pro zpracovani stavu tlacitek.
-	buttonProccess();
 
 	// Vypis stavu tlacitek.
 	if (btn_one.isClicked()) {
@@ -148,8 +113,8 @@ void loop() {
 			Serial.println("' clicks");
 		}
 
-		if (count1 >= IRQSWITCH_IMPLEMENT_CLICK_COUNT)
-		// Pokud je dosazen limit poctu stisknuti, proved reset pocitadla stisku tlacitka
+		if (count1 == IRQSWITCH_IMPLEMENT_CLICK_COUNT)
+		// Pokud je dosazen limit poctu stisknuti, proved reset pocitadla stisku
 		{
 			btn_one.cleanClickCount();
 			Serial.println("Reset clicks counter.");
@@ -163,14 +128,10 @@ void loop() {
 	}
 #endif
 
+	// Pockame 2 sekundy v necinosti
+	delay(2000);
+
 }
-
-
-
-
-
-
-
 
 
 

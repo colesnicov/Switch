@@ -9,48 +9,59 @@
  * Version:		2.5.0
  */
 
-#include <IRQSwitchHandler.hpp>
-
-uint8_t IRQSwitchHandler::CreateButton(char name[10], uint8_t pin)
+#include "IRQSwitchHandler.hpp"
+/*
+uint8_t IRQSwitchHandler::CreateButton(uint8_t pin)
 {
-	return CreateButton(name, pin, IRQSWITCH_DEFAULT_INPUT_TYPE);
+	return CreateButton(pin, IRQSWITCH_DEFAULT_INPUT_TYPE);
 }
 
-uint8_t IRQSwitchHandler::CreateButton(char name[10], uint8_t pin, uint8_t type)
+uint8_t IRQSwitchHandler::CreateButton(uint8_t pin, uint8_t type)
 {
 	IRQSwitch button;
 	uint8_t id = AddButton(&button);
 	if (id > 0)
 	{
-		button.bind(name, pin, type);
+		button.bind(pin, type);
 	}
 	return id;
 }
-
-uint8_t IRQSwitchHandler::AddButton(IRQSwitch* b)
+*/
+int IRQSwitchHandler::AddButton(IRQSwitch* b)
 
 {
 #if IRQSWITCH_HANDLER_CHECK_COUNT
 	if(m_count == MAX_BUTTONS)
 	{
-		return 0;
+		return -1;
 	}
 #endif
 
-	m_buttons[m_count] = b;
+	uint8_t id = m_count;
 	m_count++;
 
-	return m_count;
+	m_buttons[id] = b;
+//	Serial.print("Button added: ");
+//	Serial.println(id);
+
+
+	return id;
 }
 
 IRQSwitch* IRQSwitchHandler::GetButton(uint8_t id)
 {
+	for(uint8_t i =0; i<2;i++){
+//		Serial.print("bb: ");
+//		Serial.print(i);
+//		Serial.print(" : ");
+//		Serial.println(m_buttons[i]->getPin());
+	}
 	if (id > m_count)
 	{
 		return nullptr;
 	} else
 	{
-		return m_buttons[id - 1];
+		return m_buttons[id];
 	}
 }
 
@@ -66,16 +77,16 @@ void IRQSwitchHandler::Update(uint32_t ms)
 	for (uint8_t i = 0; i < m_count; i++)
 	// Tlacitko je stisknute.
 	{
-		if (digitalRead(m_buttons[i]->getPin()) == LOW)
+		if (/*digitalRead(m_buttons[i]->getPin())*/0 == 0)
 		{
 			if (m_last_clicked == 0)
 			// Zadne jine tlacitko stisknute neni.
 			{
 				m_buttons[i]->setClickStart(ms); // Nastaveni tlacitka jako "PRESSED".
-				m_last_clicked = m_buttons[i]->getPin(); // Zapamatovani ID stisknuteho tlacitka.
+				m_last_clicked = 0;//m_buttons[i]->getPin(); // Zapamatovani ID stisknuteho tlacitka.
 			}
 
-		} else if (m_last_clicked == m_buttons[i]->getPin())
+		} else if (m_last_clicked)// == m_buttons[i]->getPin())
 		// Tlacitko neni stisknute,
 		// ale naposledy stisknute tlacitko ma stejne ID.
 		{
@@ -93,4 +104,3 @@ IRQSwitchHandler::~IRQSwitchHandler()
 		m_buttons[i] = nullptr;
 	}
 }
-

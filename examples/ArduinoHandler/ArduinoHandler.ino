@@ -6,16 +6,15 @@
 * Author:    	Denis Colesnicov <eugustus@gmail.com>
 * Licence:   	MIT
 * Home:    		https://github.com/colesnicov/IRQSwitch
-* Description:	Priklad pouziti ve funkci loop. Jsou zde ukazany vsechny schopnosti knihovny.
+* Description:	Priklad pouziti ve smycce loop. Jsou zde ukazany vsechny schopnosti knihovny.
 * Note:    		Pozor! Metoda getClickCount() ma smysl, je pouzitelna pouze, v pripade pouziti externiho preruseni pro zmenu stavu tlacitka!!
 */
 
-
 #include <Arduino.h>
 
+#include "IRQSwitch/IRQSwitchArduino.hpp"
 #include "IRQSwitch/IRQSwitchConfig.h"
 #include "IRQSwitch/IRQSwitch.hpp"
-
 
 // Definice pinu
 #define BTN_one 2
@@ -25,53 +24,9 @@
 IRQSwitch btn_two;
 IRQSwitch btn_one;
 
+// Spravce obsluhy stavu tlacitek
+IRQSwitchArduino handler;
 
-// Prevence pred stiskem nekolika tlacitek soucasne.
-volatile uint8_t last_btn_clicked = 0;
-
-
-void buttonProccess() {
-
-	// Millisekundy pro detekci dlouheho stisku tlacitka.
-	uint32_t ms = millis();
-
-	// Test button 1
-	if (digitalRead(BTN_one) == LOW)
-	// Tlacitko stisknute
-	{
-		if (last_btn_clicked == 0)
-		// Zadne jine tlacitko stisknute neni.
-				{
-			btn_one.setClickStart(ms); // Nastaveni tlacitka jako "PRESSED".
-			last_btn_clicked = BTN_one; // Zapamatovani ID stisknuteho tlacitka.
-			return;
-		}
-
-	} else if (last_btn_clicked == BTN_one)
-	// Tlacitko neni stisknute,
-	// ale naposledy stisknute tlacitko ma stejne ID.
-	{
-		btn_one.setClickEnd(ms); // Nastaveni tlacitka jako "RELEASED".
-		last_btn_clicked = 0; // Nulovani ID naposledy stisknuteho tlacitka.
-		return;
-	}
-
-	// Test button 2
-	// Stejny postup ale s jinym ID (cislem pinu).
-	if (digitalRead(BTN_two) == LOW) {
-		if (last_btn_clicked == 0) {
-			btn_two.setClickStart(ms);
-			last_btn_clicked = BTN_two;
-			return;
-		}
-
-	} else if (last_btn_clicked == BTN_two) {
-		btn_two.setClickEnd(ms);
-		last_btn_clicked = 0;
-		return;
-	}
-
-}
 
 void setup() {
 	Serial.begin(115200);
@@ -89,13 +44,17 @@ void setup() {
 	//digitalWrite(BTN_one, HIGH);
 	//digitalWrite(BTN_two, HIGH);
 
+	handler.AddButton(&btn_one, BTN_one);
+	handler.AddButton(&btn_two, BTN_two);
+
+
 	Serial.println("Ready!\n\n");
 
 }
 
 void loop() {
 	// Volani funkce pro zpracovani stavu tlacitek.
-	buttonProccess();
+	handler.Update(millis());
 
 	// Vypis stavu tlacitek.
 	if (btn_one.isClicked()) {
@@ -164,27 +123,3 @@ void loop() {
 #endif
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

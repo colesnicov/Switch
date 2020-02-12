@@ -21,9 +21,9 @@
  *
  */
 
-#include <IRQSwitch.hpp>
 #include <stdint.h>
 
+#include "IRQSwitch.hpp"
 #include "IRQSwitchConfig.h"
 
 
@@ -53,7 +53,7 @@ public:
 	 *
 	 * @return	uint8_t	New ID of button. Or 0 if fail.
 	 */
-	uint8_t AddButton(IRQSwitch* b);
+	int AddButton(IRQSwitch* b);
 
 	/**
 	 * Update states.
@@ -70,7 +70,7 @@ public:
 	 *
 	 * @return	uint8_t	New ID of button. Or 0 if fail.
 	 */
-	uint8_t CreateButton(char name[10], uint8_t pin);
+	//uint8_t CreateButton( uint8_t pin);
 
 	/**
 	 * Create new button to manage.
@@ -81,7 +81,7 @@ public:
 	 *
 	 * @return	uin8_t	New ID of button. Or 0 if fail.
 	 */
-	uint8_t CreateButton(char name[10], uint8_t pin, uint8_t type);
+	//uint8_t CreateButton( uint8_t pin, uint8_t type);
 
 	/**
 	 * Get access to button.
