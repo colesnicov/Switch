@@ -27,6 +27,10 @@
  *
  *  16.02.2020 - 2.8.1
  *  - Uprava komentaru
+ *
+ *  16.02.2020 - 2.8.3
+ *  - Pridana podminka pro preprocesor ktera zamezuje compilaci Arduino handleru
+ *   na nearduino platforme.
  */
 
 #ifndef SRC_IRQSWITCHCONFIG_H_
@@ -35,15 +39,15 @@
 /**
  * Library version.
  */
-#define IRQSwitch_Version "2.8.2"
+#define IRQSwitch_Version "2.8.3"
 
 /**
  * Set to 1 if you are programming Arduino like, otherwise 0.
  * CS: Nastavte na 1 pokud programujete arduino.
  */
-#define IRQSWITCH_ARDUINO	1
+#define IRQSWITCH_ARDUINO	0
 
-#ifdef IRQSWITCH_ARDUINO
+#if IRQSWITCH_ARDUINO
 
 // We need this!
 #include "Arduino.h"

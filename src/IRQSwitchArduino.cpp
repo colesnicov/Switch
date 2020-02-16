@@ -6,8 +6,10 @@
  Author:		Denis Colesnicov <eugustus@gmail.com>
  Licence:		MIT
  Home:			https://github.com/colesnicov/IRQSwitch
- Version:		2.8.2
+ Version:		2.8.3
  */
+
+#if IRQSWITCH_ARDUINO
 
 #include "IRQSwitchArduino.hpp"
 
@@ -48,3 +50,5 @@ void IRQSwitchArduino::Update(uint32_t ms) {
 
 }
 
+
+#endif

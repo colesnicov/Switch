@@ -8,13 +8,15 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Version:		2.8.2
+ * Version:		2.8.3
  */
 
 /**
  * @todo	Pridat definici poctu tlacitek do souboru s definicemi.
  * 			Pocet tlacitek by mel odpovidat maximalnimu mnozstvi pinu MCU + 1
  */
+
+#if IRQSWITCH_ARDUINO
 
 #include <stdint.h>
 
@@ -70,3 +72,5 @@ private:
 	IRQSwitch *m_buttons[255] = { nullptr }; /*!< List of buttons. */
 	uint8_t m_last_clicked = 255; /*!< ID of last clicket button */
 };
+
+#endif
