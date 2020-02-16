@@ -20,7 +20,7 @@ IRQSwitch::~IRQSwitch() {
 
 #if IRQSWITCH_IMPLEMENT_CLICK_HELD
 bool IRQSwitch::isHolded(uint32_t ms) {
-	return m_is_clicked && ms - m_start_click > m_time_hold;
+	return isPressed() && ms - m_start_click > m_time_hold;
 }
 #endif
 
@@ -29,7 +29,7 @@ void IRQSwitch::CleanClick() {
 }
 
 bool IRQSwitch::isClicked() {
-	if (!m_is_clicked && m_end_click > 0) {
+	if (!isPressed() && m_end_click > 0) {
 		CleanClick();
 		return true;
 	} else {
@@ -97,7 +97,7 @@ void IRQSwitch::cleanClickCount() {
 #if IRQSWITCH_IMPLEMENT_CLICK_HELD_TIME
 
 uint32_t IRQSwitch::getHoldedTime(uint32_t _ms) {
-	if (m_is_clicked) {
+	if (isPressed()) {
 		return _ms - m_start_click;
 	} else {
 		return 0;
@@ -109,6 +109,11 @@ uint32_t IRQSwitch::getHoldedTimeWithReset(uint32_t _ms) {
 
 	return t;
 }
+
+bool IRQSwitch::isPressed() {
+	return m_is_clicked;
+}
+
 
 #endif
 

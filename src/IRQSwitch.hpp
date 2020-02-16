@@ -239,6 +239,18 @@ public:
 	 */
 	void setClick(uint32_t ms);
 
+	/**
+	 * Is the button pressed?
+	 *  Attention! This state does not depend on the state of the button holded!
+	 *
+	 * CS: Je tlačítko stisknuto?
+	 *  Pozor! Tento stav nezávisí na stavu podrženého tlačítka!
+	 *
+	 * @return bool TRUE if pressed, overwise FALSE.
+	 */
+	bool isPressed();
+
+
 private:
 
 	bool m_is_clicked = false; /*!< The switch button has bin clicked for now?. */
