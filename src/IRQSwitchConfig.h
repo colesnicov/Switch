@@ -35,7 +35,7 @@
 /**
  * Library version.
  */
-#define IRQSwitch_Version "2.8.1"
+#define IRQSwitch_Version "2.8.2"
 
 /**
  * Set to 1 if you are programming Arduino like, otherwise 0.

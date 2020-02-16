@@ -78,6 +78,9 @@
  *
  *  16.02.2020 - 2.8.1
  *  - Uprava komentaru
+ *
+ *  16.02.2020 - 2.8.2
+ *  - Pridana metoda 'IRQSwitch::isPressed()'
  */
 
 /**

@@ -6,7 +6,7 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Version:		2.8.1
+ * Version:		2.8.2
  */
 
 #include "IRQSwitch.hpp"
