@@ -2,11 +2,11 @@
  This file is a part of IRQSwitch Arduino library.
 
  File:			IRQSwitchArduino.cpp
- Created on:	28.03.2019
+ Created on:	12.02.2020
  Author:		Denis Colesnicov <eugustus@gmail.com>
  Licence:		MIT
  Home:			https://github.com/colesnicov/IRQSwitch
- Version:		2.8.0
+ Version:		2.8.1
  */
 
 #include "IRQSwitchArduino.hpp"

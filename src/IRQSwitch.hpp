@@ -8,11 +8,14 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Version:		2.8.0
+ * Version:		2.8.1
  *
- * Note:		Attention! The getClickCount() method should only be used
+ * Note:		Attention! The getClickCountWithReset() method should only be used
  * 				sensibly if you use external interruption to change the
- * 				status of the buttons !!
+ * 				status of the buttons!!
+ *
+ * Note:		CS: Pozor! GetClickCountWithReset() ma smysl pouzivat pouze pokud
+ * 				k pouzivate rutinu externiho preruseni pro tlacitka!!
  */
 
 /** NOTES **
@@ -73,6 +76,8 @@
  *	- Vychozi hodnoty pro clenske promene jsou nastaveny v definici tridy.
  *	- Metoda IRQSwitch::getHoldedTimeWithReset(uint32_t _ms) vraci 0.
  *
+ *  16.02.2020 - 2.8.1
+ *  - Uprava komentaru
  */
 
 /**
@@ -107,6 +112,8 @@ public:
 	/**
 	 * Is the switch has helded?
 	 *
+	 * CS: Je tlacitko udrzovane ve stisknutem stavu?
+	 *
 	 * @return bool TRUE if is helded, otherwise FALSE
 	 *
 	 * @note See IRQSWITCH_IMPLEMENT_CLICK_HELD definition
@@ -118,7 +125,9 @@ public:
 #if IRQSWITCH_IMPLEMENT_CLICK_COUNT > 0
 
 	/**
-	 * Get Click Count on the button
+	 * Get Click Count on the button.
+	 *
+	 * CS: Vrati pocet stisknuti tlacitka.
 	 *
 	 * @return uint8_t Count of clicks
 	 *
@@ -129,6 +138,8 @@ public:
 	/**
 	 * Get click count on the Button with reset clicks counter.
 	 *
+	 * CS: Vrati pocet stisknuti tlacitka a zaroven vynuluje pocitadlo.
+	 *
 	 * @return uint8_t Count of clicks
 	 *
 	 * @note @see IRQSWITCH_IMPLEMENT_CLICK_COUNT
@@ -137,6 +148,8 @@ public:
 
 	/**
 	 * Reset clicks counter.
+	 *
+	 * CS: Vynuluje pocitadlo stisknuti tlacitka.
 	 */
 	void cleanClickCount();
 
@@ -147,6 +160,9 @@ public:
 	/**
 	 * Returns the hold time of the button.
 	 *
+	 * CS: Vrati dobu v milisekundach, po kterou je tlacitko udrzovane
+	 * 	ve stisknutem stavu.
+	 *
 	 * @param ms Time in milliseconds, typically call millis()...
 	 *
 	 * @return uint32_t Time in milliseconds.
@@ -156,7 +172,10 @@ public:
 	/**
 	 * Returns the hold time of the button with reset hold counter.
 	 *
-	 * @param ms Time in milliseconds, typically call millis()...
+	 * CS: Vrati dobu v milisekundach, po kterou je tlacitko udrzovane
+	 *  ve stisknutem stavu a vynuluje pocitadlo.
+	 *
+	 * @param ms Time in milliseconds, typically from millis()...
 	 *
 	 * @return uint32_t Time in milliseconds.
 	 *
@@ -169,28 +188,38 @@ public:
 	/**
 	 * Is the switch has clicked?
 	 *
+	 * CS: Tlacitko bylo stisknuto a uvolneno?
+	 *
 	 * @return bool TRUE if has clicked, otherwise FALSE
 	 */
 	bool isClicked();
 
 	/**
-	 * Reset Click state
+	 * Reset Click state.
+	 *
+	 * CS: Vznuluje stav stisknuteho a ynovu uvolneneho tlacitka.
 	 */
 	inline void CleanClick();
 
 	/**
-	 * Set Indicies to switch un press down state
+	 * Set Sets the button to "released".
 	 *
-	 * @param ms Time in milliseconds, typically call millis()...
+	 * CS: Nastavi tlacitku stav "uvolneno".
+	 *
+	 * @see
+	 *
+	 * @param ms Time in milliseconds, typically from millis()...
 	 *
 	 * @note Pro volani uvnitr metody zpracovavajici stisk tlacitka nebo preruseni
 	 */
 	bool setClickEnd(uint32_t ms);
 
 	/**
-	 * Set Indicies to switch press down state
+	 * Set Sets the button to "pushed".
 	 *
-	 * @param ms Time in milliseconds, typically call millis()...
+	 * CS: Nastavi tlacitku stav "stisknuto".
+	 *
+	 * @param ms Time in milliseconds, typically from millis()...
 	 *
 	 * @return True if success otherwise FALSE
 	 *
@@ -199,11 +228,14 @@ public:
 	bool setClickStart(uint32_t ms);
 
 	/**
-	 * Simulate the Click on the button.
-	 * @param ms milliseconds.
+	 * Set the button to "push and release" status.
+	 *
+	 * CS: Nastavi tlacitku stav "stisknuto a uvolneno".
+	 *
+	 * @param ms Time in milliseconds, typically from millis()...
 	 *
 	 * @note This method its a pure concept!
-	 * @note Do not use this method. !
+	 * @note The method has never been tested. Use may cause undefined behavior!
 	 */
 	void setClick(uint32_t ms);
 
@@ -215,11 +247,11 @@ private:
 	uint16_t m_time_debounce = IRQSWITCH_TIME_DEBOUNCE; /*!< Delay in milliseconds to prevent a debounced noise. */
 
 #if IRQSWITCH_IMPLEMENT_CLICK_HELD
-	uint32_t m_time_hold = 450; /*!< Delay in milliseconds to roll a held action. */
+	uint32_t m_time_hold = 450; /*!< Delay in milliseconds before button hold state is registered. */
 #endif
 
 #if IRQSWITCH_IMPLEMENT_CLICK_COUNT
-	uint8_t m_click_count = 0; /*!< Incremented value for store klicks count. */
+	uint8_t m_click_count = 0; /*!< Incremental variable to maintain the number of button clicks. */
 #endif
 
 };
