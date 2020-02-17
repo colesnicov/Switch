@@ -6,30 +6,48 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Version:		2.8.2
+ * Version:		2.9.0
  */
 
 #include "IRQSwitch.hpp"
 
-IRQSwitch::IRQSwitch()
-{
+IRQSwitch::IRQSwitch() {
 }
 
 IRQSwitch::~IRQSwitch() {
 }
 
 #if IRQSWITCH_IMPLEMENT_CLICK_HELD
+
 bool IRQSwitch::isHolded(uint32_t ms) {
-	return isPressed() && ms - m_start_click > m_time_hold;
+	bool _is_clicked;
+	uint32_t _start_click;
+
+	IRQSWITCH_ATOMIC_START
+		_is_clicked = m_is_clicked;
+		_start_click = m_start_click;
+	IRQSWITCH_ATOMIC_END
+
+	return _is_clicked && ms - _start_click > m_time_hold;
 }
 #endif
 
 void IRQSwitch::CleanClick() {
-	m_end_click = 0;
+	IRQSWITCH_ATOMIC_START
+		m_end_click = 0;
+	IRQSWITCH_ATOMIC_END
 }
 
 bool IRQSwitch::isClicked() {
-	if (!isPressed() && m_end_click > 0) {
+	bool _is_clicked;
+	uint32_t _end_click;
+
+	IRQSWITCH_ATOMIC_START
+		_is_clicked = m_is_clicked;
+		_end_click = m_end_click;
+	IRQSWITCH_ATOMIC_END
+
+	if (!_is_clicked && _end_click > 0) {
 		CleanClick();
 		return true;
 	} else {
@@ -37,6 +55,9 @@ bool IRQSwitch::isClicked() {
 	}
 }
 
+/**
+ * @note Metoda je volana v rutine preruseni. ATOMIC_BLOCK neumistovat!
+ */
 void IRQSwitch::setClick(uint32_t ms) {
 	if (ms - m_end_click > m_time_debounce || m_end_click == 0) {
 		m_end_click = ms;
@@ -44,6 +65,9 @@ void IRQSwitch::setClick(uint32_t ms) {
 	}
 }
 
+/**
+ * @note Metoda je volana v rutine preruseni. ATOMIC_BLOCK neumistovat!
+ */
 bool IRQSwitch::setClickEnd(uint32_t ms) {
 	if ((ms - m_end_click > m_time_debounce || m_end_click == 0)) {
 		m_end_click = ms;
@@ -66,6 +90,9 @@ bool IRQSwitch::setClickEnd(uint32_t ms) {
 	return false;
 }
 
+/**
+ * @note Metoda je volana v rutine preruseni. ATOMIC_BLOCK neumistovat!
+ */
 bool IRQSwitch::setClickStart(uint32_t ms) {
 	if ((ms - m_end_click) > m_time_debounce || m_end_click == 0) {
 		m_start_click = ms;
@@ -78,18 +105,30 @@ bool IRQSwitch::setClickStart(uint32_t ms) {
 #if IRQSWITCH_IMPLEMENT_CLICK_COUNT
 
 uint8_t IRQSwitch::getClickCount() {
-	uint8_t click_count = m_click_count;
-	return click_count;
+	uint8_t _click_count;
+
+	IRQSWITCH_ATOMIC_START
+		_click_count = m_click_count;
+	IRQSWITCH_ATOMIC_END
+
+	return _click_count;
 }
 
 uint8_t IRQSwitch::getClickCountWithReset() {
-	uint8_t click_count = m_click_count;
-	cleanClickCount();
-	return click_count;
+	uint8_t _click_count;
+
+	IRQSWITCH_ATOMIC_START
+		_click_count = m_click_count;
+		m_click_count = 0;
+	IRQSWITCH_ATOMIC_END
+
+	return _click_count;
 }
 
 void IRQSwitch::cleanClickCount() {
-	m_click_count = 0;
+	IRQSWITCH_ATOMIC_START
+		m_click_count = 0;
+	IRQSWITCH_ATOMIC_END
 }
 
 #endif
@@ -97,8 +136,16 @@ void IRQSwitch::cleanClickCount() {
 #if IRQSWITCH_IMPLEMENT_CLICK_HELD_TIME
 
 uint32_t IRQSwitch::getHoldedTime(uint32_t _ms) {
-	if (isPressed()) {
-		return _ms - m_start_click;
+	bool _is_clicked;
+	uint32_t _start_click;
+
+	IRQSWITCH_ATOMIC_START
+		_is_clicked = m_is_clicked;
+		_start_click = m_start_click;
+	IRQSWITCH_ATOMIC_END
+
+	if (_is_clicked) {
+		return _ms - _start_click;
 	} else {
 		return 0;
 	}
@@ -111,32 +158,14 @@ uint32_t IRQSwitch::getHoldedTimeWithReset(uint32_t _ms) {
 }
 
 bool IRQSwitch::isPressed() {
-	return m_is_clicked;
+	bool _is_clicked;
+
+	IRQSWITCH_ATOMIC_START
+		_is_clicked = m_is_clicked;
+	IRQSWITCH_ATOMIC_END
+
+	return _is_clicked;
 }
 
-
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

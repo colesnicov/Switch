@@ -25,19 +25,9 @@
 
 /** UPDATES **
  *
- * 29.03.2019 - 2.5.1
- *  - Definice jsou presunuty do samostatneho souboru 'IRQSwitchConfig.h'
  *
- * 28.03.2019 - 2.5.0
- *  - Metody 'bind(...)' a 'unbind(...)' jiz jsou pouzitelne.
- *
- * 28.03.2019 - 2.4.2
- *  - Uzpusobene pro lepsi produktivitu.
- *  - Poupraveny komentare.
- *
- * 28.03.2019 - 2.4.0
- *  - Pridana metoda 'getHoldedTime()'
- *  - Pridana metoda 'getHoldedTimeWithReset()'
+ * 26.03.2019 - 2.3.5
+ *  - Pridana metoda pro zaznamenavani poctu kliknuti na tlacitko.
  *
  * 26.03.2019 - 2.3.6
  *  - Prejmenovana metoda 'setClickDown()' na setClickStart().
@@ -50,8 +40,19 @@
  *    Drive se pocitadlo zvysovalo i pri dlouhem stisku tlacitka a to je spatne.
  *    Pokud je potreba puvodni funkcionalita, snadno se da implementovat v kodu.
  *
- * 26.03.2019 - 2.3.5
- *  - Pridana metoda pro zaznamenavani poctu kliknuti na tlacitko.
+ * 28.03.2019 - 2.4.0
+ *  - Pridana metoda 'getHoldedTime()'
+ *  - Pridana metoda 'getHoldedTimeWithReset()'
+ *
+ * 28.03.2019 - 2.4.2
+ *  - Uzpusobene pro lepsi produktivitu.
+ *  - Poupraveny komentare.
+ *
+ * 28.03.2019 - 2.5.0
+ *  - Metody 'bind(...)' a 'unbind(...)' jiz jsou pouzitelne.
+ *
+ * 29.03.2019 - 2.5.1
+ *  - Definice jsou presunuty do samostatneho souboru 'IRQSwitchConfig.h'
  *
  * 03.02.2020 - 2.6.1
  *  - Metoda 'isHolded()' nyni jako argument prijima cas v milisekundach.
@@ -81,6 +82,9 @@
  *
  *  16.02.2020 - 2.8.2
  *  - Pridana metoda 'IRQSwitch::isPressed()'
+ *
+ *  17.02.2020 - 2.9.0
+ *  - Implementace "atomiticidy"
  */
 
 /**

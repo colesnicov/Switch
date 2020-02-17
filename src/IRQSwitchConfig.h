@@ -31,6 +31,9 @@
  *  16.02.2020 - 2.8.3
  *  - Pridana podminka pro preprocesor ktera zamezuje compilaci Arduino handleru
  *   na nearduino platforme.
+ *
+ *  17.02.2020 - 2.9.0
+ *  - Pridana podpora atomickych operaci.
  */
 
 #ifndef SRC_IRQSWITCHCONFIG_H_
@@ -39,7 +42,7 @@
 /**
  * Library version.
  */
-#define IRQSwitch_Version "2.8.3"
+#define IRQSwitch_Version "2.9.0"
 
 /**
  * Set to 1 if you are programming Arduino like, otherwise 0.
@@ -65,6 +68,50 @@
  * 	- HIGH = tlacitko je spinane vuci VCC.
  */
 #define IRQSWITCH_CLICK	LOW
+
+/**
+ * Macros for atomic operations.
+ *
+ * CS: Makra pro atomicke operace.
+ */
+#include <util/atomic.h>
+#define IRQSWITCH_ATOMIC_START	ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
+#define IRQSWITCH_ATOMIC_END	}
+
+#else
+
+/**
+ * Macros for atomic operations.
+ * These macros are platform dependent.
+ * These macros must be defined by the programmer at his discretion.
+ *
+ * Aaron Wisner library can be used as one of the solutions:
+ * 	https://github.com/wizard97/SimplyAtomic (BSD Licence)
+ *
+ * CS: Makra pro atomicke operace.
+ * 		Tato makra jsou zavisla na platforme.
+ * 		Tato makra si musi programator definovat podle vlastniho uvazovani.
+ *
+ * 		Jako jedno z reseni muze byt pouzita knihovna od Aaron Wisner:
+ * 		 https://github.com/wizard97/SimplyAtomic (BSD Licence)
+ *
+ * Example with SimplyAtomic by Aaron Wisner for ESP32:
+ *
+ * 	#include <SimplyAtomic.h>
+ * 	#define IRQSWITCH_ATOMIC_START	ATOMIC(){
+ *  #define IRQSWITCH_ATOMIC_END	}
+ *
+ *
+ * Example with AVR standard atomic macros for AVR/Arduino:
+ *
+ *  #include <util/atomic.h>
+ * 	#define IRQSWITCH_ATOMIC_START	ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
+ *  #define IRQSWITCH_ATOMIC_END	}
+ *
+ */
+#include <util/atomic.h>
+#define IRQSWITCH_ATOMIC_START	ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
+#define IRQSWITCH_ATOMIC_END	}
 
 #endif
 
