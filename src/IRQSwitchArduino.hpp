@@ -8,7 +8,7 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/IRQSwitch
- * Version:		2.8.3
+ * Version:		2.9.0
  */
 
 /**
@@ -16,11 +16,12 @@
  * 			Pocet tlacitek by mel odpovidat maximalnimu mnozstvi pinu MCU + 1
  */
 
+#include "IRQSwitchConfig.h"
+
 #if IRQSWITCH_ARDUINO
 
 #include <stdint.h>
 
-#include "IRQSwitchConfig.h"
 #include "IRQSwitch.hpp"
 
 class IRQSwitchArduino {

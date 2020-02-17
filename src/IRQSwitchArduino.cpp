@@ -6,12 +6,13 @@
  Author:		Denis Colesnicov <eugustus@gmail.com>
  Licence:		MIT
  Home:			https://github.com/colesnicov/IRQSwitch
- Version:		2.8.3
+ Version:		2.9.0
  */
+
+#include "IRQSwitchArduino.hpp"
 
 #if IRQSWITCH_ARDUINO
 
-#include "IRQSwitchArduino.hpp"
 
 #include "Arduino.h"
 
