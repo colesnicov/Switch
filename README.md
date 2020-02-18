@@ -1,6 +1,7 @@
+
 # Seznamte se, IRQSwitch.
 
-## IRQSwitch je sada nástrojů (Tříd) pro obsluhu stisknutí tlačítek na Embedded zařízeních.
+## IRQSwitch je kompaktní, lehká a intuitivní sada nástrojů (Tříd) pro obsluhu tlačítek na Embedded zařízeních.
 
 - ***!!Knihovna je stále ve vývoji!!***  
 - ***Není vázána na některou z rodin MCU!!***  
@@ -11,8 +12,8 @@
 Třída **'IRQSwitch'** v sobě ukrývá celou logiku pro detekci různých druhů událostí nad tlačítkem. Podporuje následující metody obsluhy tlačítek:  
 - `isClicked()` - Jednoduché stisknutí  
 - `getClickCount()` - Počet stisknutí tlačítka (mezi cykly, nebo mezi přístupy k této metodě)  
-- `isHolded()` - Udržování tlačítka ve stisknutém stavu  
-- `getHoldedTime()` - Doba v milisekundách, po kterou je tlačítko udržováno ve stisknutém stavu.
+- `isHolded(ms)` - Udržování tlačítka ve stisknutém stavu  
+- `getHoldedTime(ms)` - Doba v milisekundách, po kterou je tlačítko udržováno ve stisknutém stavu.
 
 ### Arduino  
 Pokud nechcete sami vytvářet rutinu změny stavu tlačítek, je možné k tomu použít Třídu **'IRQSwitchArduino'**.
