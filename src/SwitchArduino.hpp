@@ -8,7 +8,7 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/Switch
- * Version:		2.10.0
+ * Version:		2.10.1
  */
 
 /**
@@ -16,7 +16,7 @@
  * 			Pocet tlacitek by mel odpovidat maximalnimu mnozstvi pinu MCU + 1
  */
 
-#include "SwitchConfig.h"
+#include "SwitchConfig.hpp"
 
 #if SWITCH_ARDUINO
 

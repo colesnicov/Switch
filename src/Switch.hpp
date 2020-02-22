@@ -8,7 +8,7 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/Switch
- * Version:		2.10.0
+ * Version:		2.10.1
  *
  * Note:		Attention! The getClickCountWithReset() method should only be used
  * 				sensibly if you use external interruption to change the
@@ -98,7 +98,7 @@
 
 #include <stdint.h>
 
-#include "SwitchConfig.h"
+#include "SwitchConfig.hpp"
 
 class Switch {
 public:

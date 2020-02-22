@@ -39,6 +39,9 @@
  *  - Nove definice:
  *    - SWITCH_CLICK_DEBOUNCE
  *    - SWITCH_HELD_DEBOUNCE
+ *
+ *  22.02.2020 - 2.10.1
+ *  - Soubor 'SwitchConfig.h' prejmenovan na 'SwitchConfig.hpp'
  * 
  */
 
@@ -48,7 +51,7 @@
 /**
  * Library version.
  */
-#define Switch_Version "2.10.0"
+#define Switch_Version "2.10.1"
 
 /**
  * Set to 1 if you are programming Arduino like, otherwise 0.
