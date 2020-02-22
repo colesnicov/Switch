@@ -6,7 +6,7 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/Switch
- * Version:		2.9.0
+ * Version:		2.10.0
  */
 
 #include "Switch.hpp"
@@ -28,7 +28,7 @@ bool Switch::isHolded(uint32_t ms) {
 		_start_click = m_start_click;
 	SWITCH_ATOMIC_END
 
-	return _is_clicked && ms - _start_click > m_time_hold;
+	return _is_clicked && ms - _start_click > SWITCH_HELD_DEBOUNCE;
 }
 #endif
 
@@ -59,7 +59,7 @@ bool Switch::isClicked() {
  * @note Metoda je volana v rutine preruseni. ATOMIC_BLOCK neumistovat!
  */
 void Switch::setClick(uint32_t ms) {
-	if (ms - m_end_click > m_time_debounce || m_end_click == 0) {
+	if (ms - m_end_click > SWITCH_CLICK_DEBOUNCE || m_end_click == 0) {
 		m_end_click = ms;
 		m_is_clicked = false;
 	}
@@ -69,12 +69,12 @@ void Switch::setClick(uint32_t ms) {
  * @note Metoda je volana v rutine preruseni. ATOMIC_BLOCK neumistovat!
  */
 bool Switch::setClickEnd(uint32_t ms) {
-	if ((ms - m_end_click > m_time_debounce || m_end_click == 0)) {
+	if ((ms - m_end_click > SWITCH_CLICK_DEBOUNCE || m_end_click == 0)) {
 		m_end_click = ms;
 		m_is_clicked = false;
 
 #if SWITCH_IMPLEMENT_CLICK_HELD
-		if (ms - m_start_click > m_time_hold) {
+		if (ms - m_start_click > SWITCH_HELD_DEBOUNCE) {
 			m_end_click = 0;
 		}
 #endif
@@ -94,7 +94,7 @@ bool Switch::setClickEnd(uint32_t ms) {
  * @note Metoda je volana v rutine preruseni. ATOMIC_BLOCK neumistovat!
  */
 bool Switch::setClickStart(uint32_t ms) {
-	if ((ms - m_end_click) > m_time_debounce || m_end_click == 0) {
+	if ((ms - m_end_click) > SWITCH_CLICK_DEBOUNCE || m_end_click == 0) {
 		m_start_click = ms;
 		m_is_clicked = true;
 		return true;

@@ -34,6 +34,12 @@
  *
  *  17.02.2020 - 2.9.0
  *  - Pridana podpora atomickych operaci.
+ *
+ *  22.02.2020 - 2.10.0
+ *  - Nove definice:
+ *    - SWITCH_CLICK_DEBOUNCE
+ *    - SWITCH_HELD_DEBOUNCE
+ * 
  */
 
 #ifndef SRC_SWITCHCONFIG_H_
@@ -42,7 +48,7 @@
 /**
  * Library version.
  */
-#define Switch_Version "2.9.0"
+#define Switch_Version "2.10.0"
 
 /**
  * Set to 1 if you are programming Arduino like, otherwise 0.
@@ -120,7 +126,14 @@
  *
  * CS: Cas v milisekundach, pro zamazeni stavu "skakajiciho tlacitka".
  */
-#define SWITCH_TIME_DEBOUNCE			40
+#define SWITCH_CLICK_DEBOUNCE			40
+
+/**
+ * Delay in milliseconds before button hold state is registered
+ *
+ * CS: Prodleva v milisekundách před zaregistrováním stavu přidržení tlačítka.
+ */
+#define SWITCH_HELD_DEBOUNCE			450
 
 /**
  * Set to 1 if you wanna have a hold BUTTON functionality, otherwise 0.
@@ -128,7 +141,7 @@
  * CS: Nastavte na 1, pokud chcete mit funkcionalitu detekce
  *  udrzovaneho tlacitka.
  */
-#define SWITCH_IMPLEMENT_CLICK_HELD	1
+#define SWITCH_IMPLEMENT_CLICK_HELD	0
 
 /**
  * Set to 1 if you wanna have a time of hold BUTTON in milliseconds
@@ -137,7 +150,7 @@
  * CS: Nastavte na 1, pokud chcete mit funkcionalitu mereni doby po kterou je
  *  tlacitko udrzovane ve stisknutem stavu.
  */
-#define SWITCH_IMPLEMENT_CLICK_HELD_TIME	1
+#define SWITCH_IMPLEMENT_CLICK_HELD_TIME	0
 
 /**
  * Set (count of clicks) to positive value if you wanna to have
@@ -148,7 +161,7 @@
  *  funkcionalitu pocitani stisku tlacitka.
  *  Pozor! Minimalni hodnota je 0! Maximalni hodnota je 255!
  */
-#define SWITCH_IMPLEMENT_CLICK_COUNT 3
+#define SWITCH_IMPLEMENT_CLICK_COUNT 0
 
 /////////
 ///

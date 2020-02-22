@@ -8,7 +8,7 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/Switch
- * Version:		2.8.1
+ * Version:		2.10.0
  *
  * Note:		Attention! The getClickCountWithReset() method should only be used
  * 				sensibly if you use external interruption to change the
@@ -85,6 +85,15 @@
  *
  *  17.02.2020 - 2.9.0
  *  - Implementace "atomiticidy"
+ *
+ *  22.02.2020 - 2.10.0
+ *  Optimizace pametovych naroku
+ *  - Odstranene promenne:
+ *    - m_time_hold
+ *    - m_time_debounce
+ *    Misto nich jsou pouzite derektivy:
+ *    - SWITCH_CLICK_DEBOUNCE
+ *    - SWITCH_HELD_DEBOUNCE
  */
 
 #include <stdint.h>
@@ -255,11 +264,6 @@ private:
 	bool m_is_clicked = false; /*!< The switch button has bin clicked for now?. */
 	uint32_t m_start_click = 0; /*!< Time in milliseconds where the click/hold action is started. */
 	uint32_t m_end_click = 0; /*!< Time in milliseconds where the click/hold action is ended. */
-	uint16_t m_time_debounce = SWITCH_TIME_DEBOUNCE; /*!< Delay in milliseconds to prevent a debounced noise. */
-
-#if SWITCH_IMPLEMENT_CLICK_HELD
-	uint32_t m_time_hold = 450; /*!< Delay in milliseconds before button hold state is registered. */
-#endif
 
 #if SWITCH_IMPLEMENT_CLICK_COUNT
 	uint8_t m_click_count = 0; /*!< Incremental variable to maintain the number of button clicks. */
