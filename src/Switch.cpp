@@ -6,7 +6,7 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/Switch
- * Version:		2.10.1
+ * Version:		3.0.0
  */
 
 #include "Switch.hpp"
@@ -30,6 +30,7 @@ bool Switch::isHolded(uint32_t ms) {
 
 	return _is_clicked && ms - _start_click > SWITCH_HELD_DEBOUNCE;
 }
+
 #endif
 
 void Switch::CleanClick() {
@@ -38,22 +39,56 @@ void Switch::CleanClick() {
 	SWITCH_ATOMIC_END
 }
 
-bool Switch::isClicked() {
-	bool _is_clicked;
-	uint32_t _end_click;
+bool Switch::isClicked(uint32_t ms) {
+	bool _is_clicked = false;
+	uint32_t _end_click = 0;
+	uint32_t _start_click = 0;
+	uint8_t _click_count;
 
 	SWITCH_ATOMIC_START
 		_is_clicked = m_is_clicked;
 		_end_click = m_end_click;
+		_start_click = m_start_click;
+		_click_count = m_click_count;
 	SWITCH_ATOMIC_END
 
-	if (!_is_clicked && _end_click > 0) {
+	if (!_is_clicked && (_end_click > 0)
+#if SWITCH_IMPLEMENT_DOUBLE_CLICK
+			&& (_click_count == 1)
+			&& (ms - _start_click) > (uint32_t) SWITCH_DOUBLE_CLICK_DELAY
+#endif
+			) {
 		CleanClick();
+#if SWITCH_IMPLEMENT_DOUBLE_CLICK
+		cleanClickCount();
+#endif
 		return true;
 	} else {
 		return false;
 	}
 }
+
+#if SWITCH_IMPLEMENT_DOUBLE_CLICK
+
+bool Switch::isDoubleClicked(uint32_t ms)
+{
+	uint8_t _click_count;
+
+	SWITCH_ATOMIC_START
+		_click_count = m_click_count;
+	SWITCH_ATOMIC_END
+
+	if (!isClicked(ms) && _click_count == 2)
+	{
+		cleanClickCount();
+		return true;
+	} else
+	{
+		return false;
+	}
+}
+
+#endif
 
 /**
  * @note Metoda je volana v rutine preruseni. ATOMIC_BLOCK neumistovat!
@@ -115,12 +150,14 @@ uint8_t Switch::getClickCount() {
 }
 
 uint8_t Switch::getClickCountWithReset() {
-	uint8_t _click_count;
+	/* @todo zmenit na 0!*/
+	uint8_t _click_count = 99;
 
 	SWITCH_ATOMIC_START
 		_click_count = m_click_count;
-		m_click_count = 0;
 	SWITCH_ATOMIC_END
+
+	cleanClickCount();
 
 	return _click_count;
 }

@@ -8,7 +8,7 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/Switch
- * Version:		2.10.1
+ * Version:		3.0.0
  *
  * Note:		Attention! The getClickCountWithReset() method should only be used
  * 				sensibly if you use external interruption to change the
@@ -94,6 +94,11 @@
  *    Misto nich jsou pouzite derektivy:
  *    - SWITCH_CLICK_DEBOUNCE
  *    - SWITCH_HELD_DEBOUNCE
+ * 
+ *  24.02.2020 - 3.0.0
+ *  Nova metoda 'isDoubleClicked(...)'
+ *  Metoda 'isClicked(...)' nyni prijima argument
+ * 
  */
 
 #include <stdint.h>
@@ -198,9 +203,33 @@ public:
 	 *
 	 * CS: Tlacitko bylo stisknuto a uvolneno?
 	 *
-	 * @return bool TRUE if has clicked, otherwise FALSE
+	 * @param	ms Time in milliseconds, typically from millis()...
+	 *
+	 * @return	bool TRUE if has clicked, otherwise FALSE
+	 *
+	 * @note	Calling this method can reset the counter by pressing the button,
+	 * 			when enabled implementation of the detection of double press
+	 * 			the button! See implementation.
 	 */
-	bool isClicked();
+	bool isClicked(uint32_t ms);
+
+#if SWITCH_IMPLEMENT_DOUBLE_CLICK
+
+	/**
+	 * The button was pressed twice?
+	 *
+	 * CS: Tlacitko bylo stisknuto dvakrat?
+	 *
+	 * @param	ms Time in milliseconds, typically from millis()...
+	 *
+	 * @return	bool TRUE if double press detected, overwise FALSE.
+	 *
+	 * @note	Calling this method will reset the counter by pressing!
+	 * 			See implementation.
+	 */
+	bool isDoubleClicked(uint32_t ms);
+
+#endif
 
 	/**
 	 * Reset Click state.
