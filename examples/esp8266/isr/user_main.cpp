@@ -3,6 +3,7 @@
  * This file is a part of examples of a Switch library.
  *
  * Created on:  	22.02.2020
+ * Updated on: 		24.02.2020
  * Author:    		Denis Colesnicov <eugustus@gmail.com>
  * Licence:   		MIT
  * Home:    		https://github.com/colesnicov/Switch

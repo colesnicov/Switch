@@ -1,21 +1,19 @@
 /**
-* This file is a part of examples of a Switch library.
-*
-* Created on:  	31. 10. 2018
-* Updated on: 	12.02.2020
-* Author:    	Denis Colesnicov <eugustus@gmail.com>
-* Licence:   	MIT
-* Home:    		https://github.com/colesnicov/Switch
-* Description:	Priklad pouziti s prerusenim. Jsou zde ukazany vsechny schopnosti knihovny.
-* Note:    		Pozor! Metoda getClickCount() ma smysl, je pouzitelna pouze, v pripade pouziti externiho preruseni pro zmenu stavu tlacitka!!
-*/
-
+ * This file is a part of examples of a Switch library.
+ *
+ * Created on:  31. 10. 2018
+ * Updated on: 	24.02.2020
+ * Author:    	Denis Colesnicov <eugustus@gmail.com>
+ * Licence:   	MIT
+ * Home:    	https://github.com/colesnicov/Switch
+ * Description:	Priklad pouziti s prerusenim. Jsou zde ukazany vsechny schopnosti knihovny.
+ * Note:    	Pozor! Metoda getClickCount() ma smysl, je pouzitelna pouze, v pripade pouziti externiho preruseni pro zmenu stavu tlacitka!!
+ */
 
 #include <Arduino.h>
 
-#include "Switch/SwitchConfig.h"
+#include "Switch/SwitchConfig.hpp"
 #include "Switch/Switch.hpp"
-
 
 // Definice pinu
 #define BTN_one 2
@@ -71,13 +69,11 @@ void buttonProccess() {
 
 }
 
-
 void setup() {
 	Serial.begin(115200);
 
 	Serial.print("Switch Version ");
 	Serial.println(Switch_Version);
-
 
 	// Nastavuji piny jako vystup.
 	pinMode(BTN_one, INPUT);
@@ -99,13 +95,25 @@ void setup() {
 void loop() {
 
 	// Vypis stavu tlacitek.
-	if (btn_one.isClicked()) {
+	if (btn_one.isClicked(millis())) {
 		Serial.println("Button 1 clicked!");
 	}
 
-	if (btn_two.isClicked()) {
+	if (btn_two.isClicked(millis())) {
 		Serial.println("Button 2 clicked!");
 	}
+
+#if SWITCH_IMPLEMENT_DOUBLE_CLICK
+
+	if (btn_one.isDoubleClicked(millis())) {
+		Serial.println((char*) "Button 1 is double clicked!\n");
+	}
+
+	if (btn_two.isDoubleClicked(millis())) {
+		Serial.println((char*) "Button 2 is double clicked!\n");
+	}
+
+#endif
 
 #if SWITCH_IMPLEMENT_CLICK_HELD
 	{
@@ -135,7 +143,7 @@ void loop() {
 	}
 #endif
 
-#if SWITCH_IMPLEMENT_CLICK_COUNT > 0
+#if !SWITCH_IMPLEMENT_DOUBLE_CLICK &&  SWITCH_IMPLEMENT_CLICK_COUNT > 0
 	{
 		// Prvni tlacitko je bez automatickeho resetovani pocitadla stisku tlacitka.
 		uint8_t count1 = btn_one.getClickCount();
@@ -164,31 +172,10 @@ void loop() {
 	}
 #endif
 
+#if !SWITCH_IMPLEMENT_DOUBLE_CLICK
 	// Pockame 2 sekundy v necinosti
-	delay(2000);
+	//delay(2000);
+#endif
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

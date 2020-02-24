@@ -5,6 +5,7 @@
  * This file is a part of examples of a Switch library.
  *
  * Created on:  	17.02.2020
+ * Updated on: 		24.02.2020
  * Author:    		Denis Colesnicov <eugustus@gmail.com>
  * Licence:   		MIT
  * Home:    		https://github.com/colesnicov/Switch
@@ -17,9 +18,9 @@
 #include <avr/interrupt.h>
 #include <stdlib.h>
 
-#include "Switch/SwitchArduino.hpp"
-#include "Switch/SwitchConfig.h"
+#include "Switch/SwitchConfig.hpp"
 #include "Switch/Switch.hpp"
+
 #include "uart/uart.hpp"
 #include "utils/avr.hpp"
 #include "millis/millis.hpp"
@@ -85,7 +86,7 @@ extern "C" int main() {
 	/* Odkomentovat, pokud nejsou pripojeny externi PULLUP odpory */
 //	SetAsOn(BTN_PORT, BTN_ONE_PIN);
 //	SetAsOn(BTN_PORT, BTN_TWO_PIN);
-
+	
 // Navesuji preruseni.
 	EICRA |= (1 << ISC00) | (1 << ISC10); // INT0 a INT1 na obe hrany
 	EIMSK |= (1 << INT0) | (1 << INT1); // Zapinam INT0 a INT1
@@ -100,23 +101,35 @@ extern "C" int main() {
 
 	while (true) {
 
-// Vypis stavu tlacitek.
-		if (btn_one.isClicked()) {
-			uart_puts((char*) "Button 1 clicked!\n");
+		// Vypis stavu tlacitek.
+		if (btn_one.isClicked(millis())) {
+			uart_puts("Button 1 clicked!\n");
 		}
 
-		if (btn_two.isClicked()) {
-			uart_puts((char*) "Button 2 clicked!\n");
+		if (btn_two.isClicked(millis())) {
+			uart_puts("Button 2 clicked!\n");
 		}
+
+#if SWITCH_IMPLEMENT_DOUBLE_CLICK
+
+		if (btn_one.isDoubleClicked(millis())) {
+			uart_puts((char*) "Button 1 is double clicked!\n");
+		}
+
+		if (btn_two.isDoubleClicked(millis())) {
+			uart_puts((char*) "Button 2 is double clicked!\n");
+		}
+
+#endif
 
 #if SWITCH_IMPLEMENT_CLICK_HELD
 		{
 			if (btn_one.isHolded(millis())) {
-				uart_puts((char*) "Button 1 holded!\n");
+				uart_puts("Button 1 holded!\n");
 			}
 
 			if (btn_two.isHolded(millis())) {
-				uart_puts((char*) "Button 2 holded!\n");
+				uart_puts("Button 2 holded!\n");
 			}
 		}
 #endif
@@ -141,12 +154,12 @@ extern "C" int main() {
 		}
 #endif
 
-#if SWITCH_IMPLEMENT_CLICK_COUNT > 0
+#if !SWITCH_IMPLEMENT_DOUBLE_CLICK &&  SWITCH_IMPLEMENT_CLICK_COUNT > 0
 		{
-// Prvni tlacitko je bez automatickeho resetovani pocitadla stisku tlacitka.
+			// Prvni tlacitko je bez automatickeho resetovani pocitadla stisku tlacitka.
 			uint8_t count1 = btn_one.getClickCount();
 
-// Druhe tlacitko s automatickym resetovanim pocitadla stisknuti tlacitka.
+			// Druhe tlacitko s automatickym resetovanim pocitadla stisknuti tlacitka.
 			uint8_t count2 = btn_two.getClickCountWithReset();
 
 			if (count1 > 0) {
@@ -158,7 +171,7 @@ extern "C" int main() {
 			}
 
 			if (count1 >= SWITCH_IMPLEMENT_CLICK_COUNT)
-// Pokud je dosazen limit poctu stisknuti, proved reset pocitadla stisku tlacitka
+			// Pokud je dosazen limit poctu stisknuti, proved reset pocitadla stisku tlacitka
 			{
 				btn_one.cleanClickCount();
 				uart_puts((char*) "Reset clicks counter.\n");
@@ -174,8 +187,11 @@ extern "C" int main() {
 		}
 #endif
 
-// Pockame 2 sekundy v necinosti
-		delay(2000);
+#if !SWITCH_IMPLEMENT_DOUBLE_CLICK
+		// Pockame 2 sekundy v necinosti
+		//delay(2000);
+#endif
 
 	}
+
 }

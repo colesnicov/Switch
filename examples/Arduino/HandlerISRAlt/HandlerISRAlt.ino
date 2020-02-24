@@ -2,6 +2,7 @@
  * This file is a part of examples of a Switch library.
  *
  * Created on:  	16.02.2020
+* Updated on:		24.02.2020
  * Author:    		Denis Colesnicov <eugustus@gmail.com>
  * Licence:   		MIT
  * Home:    		https://github.com/colesnicov/Switch
@@ -13,7 +14,7 @@
 #include <Arduino.h>
 
 #include "Switch/SwitchArduino.hpp"
-#include "Switch/SwitchConfig.h"
+#include "Switch/SwitchConfig.hpp"
 #include "Switch/Switch.hpp"
 
 // Definice pinu
@@ -52,6 +53,7 @@ void setup() {
 	/* Odkomentovat, pokud nejsou pripojeny externi PULLUP odpory */
 	//digitalWrite(BTN_one, HIGH);
 	//digitalWrite(BTN_two, HIGH);
+
 	handler.AddButton(&btn_one, BTN_one);
 	handlerAlt.AddButton(&btn_two, BTN_two);
 
@@ -68,11 +70,11 @@ void loop() {
 	// Vypis stavu tlacitek.
 
 	if (handlerAlt.GetButton(BTN_two)->isPressed()) {
-		if (btn_one.isClicked()) {
+		if (btn_one.isClicked(millis())) {
 			Serial.println("Alternative button + Button 1 clicked!");
 		}
 	} else {
-		if (btn_one.isClicked()) {
+		if (btn_one.isClicked(millis())) {
 			Serial.println("Button 1 clicked!");
 		}
 	}

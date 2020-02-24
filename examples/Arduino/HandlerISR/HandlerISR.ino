@@ -2,7 +2,7 @@
 * This file is a part of examples of a Switch library.
 *
 * Created on:  	31. 10. 2018
-* Updated on: 	12.02.2020
+* Updated on: 	24.02.2020
 * Author:    	Denis Colesnicov <eugustus@gmail.com>
 * Licence:   	MIT
 * Home:    		https://github.com/colesnicov/Switch
@@ -14,7 +14,7 @@
 #include <Arduino.h>
 
 #include "Switch/SwitchArduino.hpp"
-#include "Switch/SwitchConfig.h"
+#include "Switch/SwitchConfig.hpp"
 #include "Switch/Switch.hpp"
 
 
@@ -60,16 +60,29 @@ void setup() {
 
 }
 
+
 void loop() {
 
 	// Vypis stavu tlacitek.
-	if (btn_one.isClicked()) {
+	if (btn_one.isClicked(millis())) {
 		Serial.println("Button 1 clicked!");
 	}
 
-	if (btn_two.isClicked()) {
+	if (btn_two.isClicked(millis())) {
 		Serial.println("Button 2 clicked!");
 	}
+
+#if SWITCH_IMPLEMENT_DOUBLE_CLICK
+
+	if (btn_one.isDoubleClicked(millis())) {
+		Serial.println((char*) "Button 1 is double clicked!");
+	}
+
+	if (btn_two.isDoubleClicked(millis())) {
+		Serial.println((char*) "Button 2 is double clicked!");
+	}
+
+#endif
 
 #if SWITCH_IMPLEMENT_CLICK_HELD
 	{
@@ -99,7 +112,7 @@ void loop() {
 	}
 #endif
 
-#if SWITCH_IMPLEMENT_CLICK_COUNT > 0
+#if !SWITCH_IMPLEMENT_DOUBLE_CLICK &&  SWITCH_IMPLEMENT_CLICK_COUNT > 0
 	{
 		// Prvni tlacitko je bez automatickeho resetovani pocitadla stisku tlacitka.
 		uint8_t count1 = btn_one.getClickCount();
@@ -113,8 +126,8 @@ void loop() {
 			Serial.println("' clicks");
 		}
 
-		if (count1 == SWITCH_IMPLEMENT_CLICK_COUNT)
-		// Pokud je dosazen limit poctu stisknuti, proved reset pocitadla stisku
+		if (count1 >= SWITCH_IMPLEMENT_CLICK_COUNT)
+		// Pokud je dosazen limit poctu stisknuti, proved reset pocitadla stisku tlacitka
 		{
 			btn_one.cleanClickCount();
 			Serial.println("Reset clicks counter.");
@@ -128,24 +141,11 @@ void loop() {
 	}
 #endif
 
+#if !SWITCH_IMPLEMENT_DOUBLE_CLICK
 	// Pockame 2 sekundy v necinosti
-	delay(2000);
+	//delay(2000);
+#endif
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
