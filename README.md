@@ -10,7 +10,8 @@
 ------------------------------------
 
 Třída **'Switch'** v sobě ukrývá celou logiku pro detekci různých druhů událostí nad tlačítkem. Podporuje následující metody obsluhy tlačítek:  
-- `isClicked()` - Jednoduché stisknutí  
+- `isClicked(ms)` - Jednoduché stisknutí  
+- `isDoubleClicked(ms)` - Dvojité stisknutí  
 - `getClickCount()` - Počet stisknutí tlačítka (mezi cykly, nebo mezi přístupy k této metodě)  
 - `isHolded(ms)` - Udržování tlačítka ve stisknutém stavu  
 - `getHoldedTime(ms)` - Doba v milisekundách, po kterou je tlačítko udržováno ve stisknutém stavu.

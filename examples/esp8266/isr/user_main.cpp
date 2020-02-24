@@ -9,8 +9,6 @@
  * Home:    		https://github.com/colesnicov/Switch
  * Description:		Priklad pouziti na ESP8266 s ESP-RTOS-SDK.
  *
- * Note:    		Pozor! Kvuli FREERTOS a rychlosti ESP8266 detekce poctu
- * 					 kliku ZATIM neni implementovana!
  */
 
 /**
