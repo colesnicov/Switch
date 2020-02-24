@@ -3,7 +3,7 @@
  * This file is a part of examples of a Switch library.
  *
  * Created on:  	22.02.2020
- * Updated on: 		24.02.2020
+ * Updated on:  		24.02.2020
  * Author:    		Denis Colesnicov <eugustus@gmail.com>
  * Licence:   		MIT
  * Home:    		https://github.com/colesnicov/Switch
@@ -61,6 +61,7 @@
 
 #define millis()	(uint32_t) (xTaskGetTickCount() * portTICK_RATE_MS)
 
+
 static xQueueHandle switch_evt_queue = NULL;
 
 // Slouzi k prevenci proti kliknuti na nekolik tlacitek soucasne
@@ -81,6 +82,7 @@ static void gpio_isr_handler(void *arg)
 
 	xQueueSendFromISR(switch_evt_queue, &gpio_num, NULL);
 }
+
 
 /**
  * Smycka nastavuji stavy tlacitek.
@@ -150,15 +152,29 @@ static void task_loop(void *arg)
 	for (;;)
 	{
 		// Vypis stavu tlacitek.
-		if (btn_one.isClicked())
+		if (btn_one.isClicked(millis()))
 		{
 			ESP_LOGI(TAG_LOOP, (char* ) "Button 1 clicked!\n");
 		}
 
-		if (btn_two.isClicked())
+		if (btn_two.isClicked(millis()))
 		{
 			ESP_LOGI(TAG_LOOP, (char* ) "Button 2 clicked!\n");
 		}
+
+#if SWITCH_IMPLEMENT_DOUBLE_CLICK
+
+		if (btn_one.isDoubleClicked(millis()))
+		{
+			ESP_LOGI(TAG_LOOP, (char* ) "Button 1 is double clicked!\n");
+		}
+
+		if (btn_two.isDoubleClicked(millis()))
+		{
+			ESP_LOGI(TAG_LOOP, (char* ) "Button 2 is double clicked!\n");
+		}
+
+#endif
 
 #if SWITCH_IMPLEMENT_CLICK_HELD
 		{
@@ -192,13 +208,15 @@ static void task_loop(void *arg)
 		}
 #endif
 
-#if SWITCH_IMPLEMENT_CLICK_COUNT > 0
+#if !SWITCH_IMPLEMENT_DOUBLE_CLICK &&  SWITCH_IMPLEMENT_CLICK_COUNT > 0
 		{
 			// Prvni tlacitko je bez automatickeho resetovani pocitadla stisku tlacitka.
 			uint8_t count1 = btn_one.getClickCount();
+			//			uint8_t count1 = 0;
 
 			// Druhe tlacitko s automatickym resetovanim pocitadla stisknuti tlacitka.
-			uint8_t count2 = btn_two.getClickCountWithReset();
+			uint8_t count2 = btn_two.getClickCount(); //WithReset();
+			//			uint8_t count2 = 0;
 
 			if (count1 > 0)
 			{
@@ -265,12 +283,4 @@ extern "C" void app_main(void)
 	ESP_LOGI(TAG_MAIN, "Switch Version %s\n\n", (char*) Switch_Version);
 
 }
-
-
-
-
-
-
-
-
 
