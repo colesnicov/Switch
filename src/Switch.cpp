@@ -42,14 +42,18 @@ void Switch::CleanClick() {
 bool Switch::isClicked(uint32_t ms) {
 	bool _is_clicked = false;
 	uint32_t _end_click = 0;
+#if SWITCH_IMPLEMENT_DOUBLE_CLICK
 	uint32_t _start_click = 0;
 	uint8_t _click_count;
+#endif
 
 	SWITCH_ATOMIC_START
 		_is_clicked = m_is_clicked;
 		_end_click = m_end_click;
+#if SWITCH_IMPLEMENT_DOUBLE_CLICK
 		_start_click = m_start_click;
 		_click_count = m_click_count;
+#endif
 	SWITCH_ATOMIC_END
 
 	if (!_is_clicked && (_end_click > 0)
