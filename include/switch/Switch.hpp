@@ -8,19 +8,19 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/Switch
- * Version:		3.0.0
+ * Version:		3.0.1
  *
  * Note:		Attention! The getClickCountWithReset() method should only be used
  * 				sensibly if you use external interruption to change the
  * 				status of the buttons!!
  *
- * Note:		CS: Pozor! GetClickCountWithReset() ma smysl pouzivat pouze pokud
+ * Note:		Pozor! GetClickCountWithReset() ma smysl pouzivat pouze pokud
  * 				k pouzivate rutinu externiho preruseni pro tlacitka!!
  */
 
 /** NOTES **
  *
- * - Nepouzivat 'setClick(...)' - Neni zrejmy koncept, k cemu je?
+ * - Pouziti 'setClick(...)' - Neni zrejmy koncept, k cemu je?
  */
 
 /** UPDATES **
@@ -99,11 +99,15 @@
  *  Nova metoda 'isDoubleClicked(...)'
  *  Metoda 'isClicked(...)' nyni prijima argument
  * 
+ *
+ * 27.08.2022 - 3.0.1
+ * - Zmena souborove struktury projektu.
+ *
  */
 
 #include <stdint.h>
 
-#include "SwitchConfig.hpp"
+#include "switch/SwitchConfig.hpp"
 
 class Switch {
 public:
@@ -286,7 +290,6 @@ public:
 	 * @return bool TRUE if pressed, overwise FALSE.
 	 */
 	bool isPressed();
-
 
 private:
 

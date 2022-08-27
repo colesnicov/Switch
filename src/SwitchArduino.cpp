@@ -6,13 +6,14 @@
  Author:		Denis Colesnicov <eugustus@gmail.com>
  Licence:		MIT
  Home:			https://github.com/colesnicov/Switch
- Version:		3.0.0
+ Version:		3.0.1
  */
 
-#include "SwitchArduino.hpp"
+#include "switch/SwitchConfig.hpp"
 
 #if SWITCH_ARDUINO
 
+#include "switch/SwitchArduino.hpp"
 
 #include "Arduino.h"
 

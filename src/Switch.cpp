@@ -6,10 +6,10 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/Switch
- * Version:		3.0.0
+ * Version:		3.0.1
  */
 
-#include "Switch.hpp"
+#include "switch/Switch.hpp"
 
 Switch::Switch() {
 }

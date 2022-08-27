@@ -55,13 +55,13 @@
 /**
  * Library version.
  */
-#define Switch_Version "3.0.0"
+#define Switch_Version "3.0.1"
 
 /**
  * Set to 1 if you are programming Arduino like, otherwise 0.
  * CS: Nastavte na 1 pokud programujete arduino.
  */
-#define SWITCH_ARDUINO	1
+#define SWITCH_ARDUINO	0
 
 #if SWITCH_ARDUINO
 

@@ -8,7 +8,7 @@
  * Author:		Denis Colesnicov <eugustus@gmail.com>
  * Licence:		MIT
  * Home:		https://github.com/colesnicov/Switch
- * Version:		3.0.0
+ * Version:		3.0.1
  */
 
 /**
@@ -16,13 +16,13 @@
  * 			Pocet tlacitek by mel odpovidat maximalnimu mnozstvi pinu MCU + 1
  */
 
-#include "SwitchConfig.hpp"
+#include "switch/SwitchConfig.hpp"
 
 #if SWITCH_ARDUINO
 
 #include <stdint.h>
 
-#include "Switch.hpp"
+#include "switch/Switch.hpp"
 
 class SwitchArduino {
 public:
